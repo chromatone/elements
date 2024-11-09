@@ -3,7 +3,7 @@ import { el } from "@elemaudio/core";
 
 const parameters = ['gate', 'midi', 'vel']
 
-export function useVoices(VOICE_COUNT = 12) {
+export function useVoices(VOICE_COUNT = 8) {
 
   const voices = reactive(Array(VOICE_COUNT).fill(null).map(() => Object.fromEntries(parameters.map((p) => [p, { value: 0, ref: null, setter: null }]))));
 
@@ -13,10 +13,11 @@ export function useVoices(VOICE_COUNT = 12) {
     voices.forEach(voice => {
       parameters.forEach(param => {
         const [ref, setter] = core.createRef('const', { value: voice[param].value }, []);
-        voice[param].ref = ref;
+        voice[param].ref = el.smooth(el.tau2pole(0.001), ref);;
         voice[param].setter = setter;
       });
     });
+
     initialized.value = true
   }
 
@@ -24,6 +25,7 @@ export function useVoices(VOICE_COUNT = 12) {
 
   function cycleNote(num, velocity) {
     if (velocity > 0) {
+
       const index = findNextAvailableVoice(nextVoiceIndex);
       updateVoice(index, { gate: 1, midi: num, vel: velocity });
     } else {
@@ -33,6 +35,7 @@ export function useVoices(VOICE_COUNT = 12) {
 
   function updateVoice(index, params) {
     if (!initialized.value) return
+
     const voice = voices[index];
     Object.entries(params).forEach(([param, value]) => {
       if (param in voice && value !== undefined) {
@@ -80,9 +83,3 @@ export function useVoices(VOICE_COUNT = 12) {
 
   return { voices, initVoices, updateVoice, cycleNote, stopAll, getVoiceParams };
 }
-
-
-
-
-
-

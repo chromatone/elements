@@ -28,8 +28,8 @@ export function useParams(params, title = "ref") {
 
   function initRefs(core) {
     for (let key in params) {
-      let [node, setter] = core.createRef("const", { value: controls[key] }, []);
-      cv[key] = el.smooth(el.tau2pole(0.01), node);
+      let [node, setter] = core.createRef("const", { value: controls[key] }, [])
+      cv[key] = el.smooth(el.tau2pole(0.01), node)
       setters[key] = setter
     }
     refsInitiated = true

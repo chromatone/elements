@@ -3,12 +3,11 @@ import { el } from '@elemaudio/core'
 
 import { ref, reactive } from "vue";
 import { useParams } from './useParams';
-import { useVoices } from './useVoices';
 import { srvb } from './srvb'
+import { useVoices } from './useVoices';
+
 
 const params = {
-  "synth_trigger": { "value": 0, "min": 0, "max": 1, "step": 0.01, "nostore": true },
-  "synth_midi": { "value": 57, "min": 0, "max": 127, "step": 0.01 },
   "reverb_on": { "value": 1, "min": 0, "max": 1, "step": 1, "hidden": true },
   "reverb_size": { "value": 0.2, "min": 0, "max": 1, "step": 0.01 },
   "reverb_decay": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
@@ -51,11 +50,15 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 
-    const sound = el.mul(
-      cv.synth_trigger,
-      el.cycle(midiFrequency(cv.synth_midi)))
+    function createVoice({ gate, midi, vel }) {
+      return el.mul(gate, vel, el.tanh(el.cycle(midiFrequency(midi))))
+    }
+
+    const sound = el.tanh(el.add(...voices.map((_, i) => createVoice(getVoiceParams(i))))
+    )
+
+    const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 
     const signal = el.fft({ name: 'synth', size: 2048 }, el.scope({ name: 'synth', size: 512 }, el.add(sampleRate, sound)))
 
@@ -74,18 +77,24 @@ export function useSynth() {
     started.value = true
   }
 
-  function play() {
+  function play(midi = 57, vel = 1) {
     if (!started.value) { start() }
-    controls.synth_trigger = 1
+    cycleNote(midi, vel)
   }
 
-  function stop() { controls.synth_trigger = 0 }
+  function stop(midi = 57) { cycleNote(midi, 0) }
 
-  return { controls, groups, play, stop, initiated, started, meters, scopes, FFTs, voices, cycleNote }
+  return { controls, groups, play, stop, initiated, started, meters, scopes, FFTs, voices }
 }
 
 
-
 export const midiFrequency = x => el.mul(440, el.pow(2, el.smooth(el.tau2pole(0.001), el.div(el.sub(x, 69), 12))))
+
+
+
+
+
+
+
 
 

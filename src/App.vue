@@ -1,16 +1,20 @@
 <script setup>
+import { ref } from 'vue';
 import ControlRotary from './ControlRotary.vue'
 import ElemFFT from './ElemFFT.vue';
 import ElemScope from './ElemScope.vue';
 import { useSynth } from './useSynth';
 
-const { play, stop, started, controls, groups, voices, cycleNote } = useSynth()
+const { play, stop, started, controls, groups, voices, } = useSynth()
+
+const midi = ref(57)
 </script>
 
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   ElemScope()
   .flex-1
+  ControlRotary.h-90(v-model="midi" :min="10" :max="120" :step="1" param="MIDI")
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
     control-rotary.w-4em(
@@ -21,9 +25,8 @@ const { play, stop, started, controls, groups, voices, cycleNote } = useSynth()
       :param="c")
 
   button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
-    @pointerdown="play()" 
-    @pointerup="stop()" 
-    @pointerleave="stop()") {{ started ? 'Press to play sound' : 'Start' }}
+    @pointerdown="play(midi)" 
+    @pointerup="stop(midi)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex-1
   ElemFFT
 </template>
