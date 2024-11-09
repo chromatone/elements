@@ -5,8 +5,6 @@ import ControlRotary from './ControlRotary.vue'
 import { useSynth } from './useSynth';
 
 
-const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-
 const n = ref(0)
 
 
@@ -16,12 +14,8 @@ const { play, stop, started } = useSynth()
 </script>
 
 <template lang="pug">
-.flex.flex-col.items-stretch.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white
-  button.text-2xl.p-4.cursor-pointer( 
-    @pointerdown="play()" 
-    @pointerup="stop()" 
-    @pointerleave="stop()") {{ started ? 'Press to play sound' : 'Start' }}
-  .p-3 {{ n }}
+.flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white
+  .flex-1
   control-rotary.w-4em(
     v-model="n" 
     :min="0" 
@@ -30,7 +24,11 @@ const { play, stop, started } = useSynth()
     :fixed="0" 
     param="N")
 
-
+  button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
+    @pointerdown="play()" 
+    @pointerup="stop()" 
+    @pointerleave="stop()") {{ started ? 'Press to play sound' : 'Start' }}
+  .flex-1
 </template>
 
 <style lang="postcss">

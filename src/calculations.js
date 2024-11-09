@@ -3,6 +3,8 @@
  * @description All the basic math for note-frequency convertion
  */
 
+export const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+
 
 export function midiColor(note, velocity, alpha) {
   const { pitch, octave } = pitchNoteOctave(note - 69)
