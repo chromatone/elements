@@ -5,9 +5,13 @@ import { ref, reactive } from "vue";
 import { useParams } from './useParams';
 import { srvb } from './srvb'
 import { useVoices } from './useVoices';
+import { useVoice } from './useVoice';
+
 
 
 const params = {
+  "synth_vol": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
+
   "reverb_on": { "value": 1, "min": 0, "max": 1, "step": 1, "hidden": true },
   "reverb_size": { "value": 0.2, "min": 0, "max": 1, "step": 0.01 },
   "reverb_decay": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
@@ -50,17 +54,11 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-
-    function createVoice({ gate, midi, vel }) {
-      return el.mul(gate, vel, el.tanh(el.cycle(midiFrequency(midi))))
-    }
-
-    const sound = el.tanh(el.add(...voices.map((_, i) => createVoice(getVoiceParams(i))))
-    )
+    const sound = el.tanh(el.add(...voices.map((_, i) => useVoice(getVoiceParams(i), cv))))
 
     const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 
-    const signal = el.fft({ name: 'synth', size: 2048 }, el.scope({ name: 'synth', size: 512 }, el.add(sampleRate, sound)))
+    const signal = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, sound)))
 
     const stereo = srvb({
       key: 'srvb',
@@ -86,14 +84,6 @@ export function useSynth() {
 
   return { controls, groups, play, stop, initiated, started, meters, scopes, FFTs, voices }
 }
-
-
-export const midiFrequency = x => el.mul(440, el.pow(2, el.smooth(el.tau2pole(0.001), el.div(el.sub(x, 69), 12))))
-
-
-
-
-
 
 
 

@@ -4,7 +4,7 @@ import { FFTs, meters } from './useSynth';
 import { freqColor } from './calculations';
 
 const props = defineProps({
-  name: { default: 'synth', type: String }
+  name: { default: 'main', type: String }
 })
 
 const FFT = reactive({

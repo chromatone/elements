@@ -4,6 +4,7 @@ import ControlRotary from './ControlRotary.vue'
 import ElemFFT from './ElemFFT.vue';
 import ElemScope from './ElemScope.vue';
 import { useSynth } from './useSynth';
+import { pitchColor } from './calculations';
 
 const { play, stop, started, controls, groups, voices, } = useSynth()
 
@@ -13,8 +14,7 @@ const midi = ref(57)
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   ElemScope()
-  .flex-1
-  ControlRotary.h-90(v-model="midi" :min="10" :max="120" :step="1" param="MIDI")
+  .flex-1 
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
     control-rotary.w-4em(
@@ -23,10 +23,13 @@ const midi = ref(57)
       v-model="controls[`${g}_${c}`]" 
       v-bind="control"
       :param="c")
-
-  button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
-    @pointerdown="play(midi)" 
-    @pointerup="stop(midi)" ) {{ started ? 'Press to play sound' : 'Start' }}
+  .flex.items-center
+    ControlRotary(v-model="midi" :min="10" :max="120" :step="1" param="MIDI")
+    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
+      @pointerdown="play(midi)" 
+      @pointerup="stop(midi)" ) {{ started ? 'Press to play sound' : 'Start' }}
+  .flex.flex-wrap.gap-2.items-center
+    .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
   .flex-1
   ElemFFT
 </template>

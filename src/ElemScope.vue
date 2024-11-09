@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { scopes } from './useSynth';
 
 const props = defineProps({
-  name: { default: 'synth', type: String },
+  name: { default: 'main', type: String },
   color: { default: 'currentColor', type: String },
   triggerLevel: { default: 0, type: Number },
 });
