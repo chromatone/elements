@@ -32,7 +32,7 @@ export function useSynth() {
 
   const { controls, cv, groups, initRefs } = useParams(params, 'el')
 
-  const { voices, cycleNote, initVoices, getVoiceParams } = useVoices()
+  const { voices, cycleNote, initVoices, getVoiceParams, stopAll } = useVoices()
 
   async function start() {
 
@@ -82,7 +82,7 @@ export function useSynth() {
 
   function stop(midi = 57) { cycleNote(midi, 0) }
 
-  return { controls, groups, play, stop, initiated, started, meters, scopes, FFTs, voices }
+  return { controls, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
 }
 
 

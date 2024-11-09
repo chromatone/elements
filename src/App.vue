@@ -5,10 +5,13 @@ import ElemFFT from './ElemFFT.vue';
 import ElemScope from './ElemScope.vue';
 import { useSynth } from './useSynth';
 import { pitchColor } from './calculations';
+import { onKeyDown } from '@vueuse/core';
 
-const { play, stop, started, controls, groups, voices, } = useSynth()
+const { play, stop, stopAll, started, controls, groups, voices, } = useSynth()
 
 const midi = ref(57)
+
+onKeyDown('Escape', () => { stopAll() })
 </script>
 
 <template lang="pug">
