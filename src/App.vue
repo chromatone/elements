@@ -4,7 +4,7 @@ import ElemFFT from './ElemFFT.vue';
 import ElemScope from './ElemScope.vue';
 import { useSynth } from './useSynth';
 
-const { play, stop, started, controls, groups, meters, scopes, FFTs } = useSynth()
+const { play, stop, started, controls, groups, voices, cycleNote } = useSynth()
 </script>
 
 <template lang="pug">
