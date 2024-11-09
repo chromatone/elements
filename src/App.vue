@@ -2,16 +2,25 @@
 import { reactive, ref } from 'vue'
 
 import ControlRotary from './ControlRotary.vue'
+import { useSynth } from './useSynth';
+
 
 const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
 
 const n = ref(0)
 
 
+const { play, stop, started } = useSynth()
+
+
 </script>
 
 <template lang="pug">
 .flex.flex-col.items-stretch.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white
+  button.text-2xl.p-4.cursor-pointer( 
+    @pointerdown="play()" 
+    @pointerup="stop()" 
+    @pointerleave="stop()") {{ started ? 'Press to play sound' : 'Start' }}
   .p-3 {{ n }}
   control-rotary.w-4em(
     v-model="n" 
@@ -20,7 +29,7 @@ const n = ref(0)
     :step="0.05" 
     :fixed="0" 
     param="N")
-          
+
 
 </template>
 

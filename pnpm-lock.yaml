@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@elemaudio/core':
+        specifier: ^3.2.1
+        version: 3.2.1
+      '@elemaudio/web-renderer':
+        specifier: ^3.2.3
+        version: 3.2.3
       '@unocss/reset':
         specifier: ^0.64.0
         version: 0.64.0
