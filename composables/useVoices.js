@@ -5,16 +5,21 @@ const parameters = ['gate', 'midi', 'vel']
 
 export function useVoices(VOICE_COUNT = 8) {
 
-  const voices = reactive(Array(VOICE_COUNT).fill(null).map(() => Object.fromEntries(parameters.map((p) => [p, { value: 0, ref: null, setter: null }]))));
+  const voices = reactive(Array(VOICE_COUNT)
+    .fill(null).map(() =>
+      Object.fromEntries(parameters.map((p) =>
+        [p, { value: 0, ref: null, setter: null }])
+      )
+    ))
 
   const initialized = ref(false)
 
   function initVoices(core) {
     voices.forEach(voice => {
       parameters.forEach(param => {
-        const [ref, setter] = core.createRef('const', { value: voice[param].value }, []);
-        voice[param].ref = el.smooth(el.tau2pole(0.001), ref);;
-        voice[param].setter = setter;
+        const [ref, setter] = core.createRef('const', { value: voice[param].value }, [])
+        voice[param].ref = el.smooth(el.tau2pole(0.001), ref)
+        voice[param].setter = setter
       });
     });
 
@@ -27,9 +32,9 @@ export function useVoices(VOICE_COUNT = 8) {
     if (velocity > 0) {
 
       const index = findNextAvailableVoice(nextVoiceIndex);
-      updateVoice(index, { gate: 1, midi: num, vel: velocity });
+      updateVoice(index, { gate: 1, midi: num, vel: velocity })
     } else {
-      releaseVoices(voices, num);
+      releaseVoices(voices, num)
     }
   }
 
@@ -39,8 +44,8 @@ export function useVoices(VOICE_COUNT = 8) {
     const voice = voices[index];
     Object.entries(params).forEach(([param, value]) => {
       if (param in voice && value !== undefined) {
-        voice[param].value = value;
-        voice[param].setter?.({ value });
+        voice[param].value = value
+        voice[param].setter?.({ value })
       }
     });
   }
@@ -48,13 +53,13 @@ export function useVoices(VOICE_COUNT = 8) {
   function releaseVoices(voiceRefs, midiNote) {
     voiceRefs.forEach((v, i) => {
       if (v.midi.value === midiNote) {
-        updateVoice(i, { gate: 0 });
+        updateVoice(i, { gate: 0 })
       }
     });
   }
 
   function stopAll() {
-    voices.forEach((_, i) => updateVoice(i, { gate: 0 }));
+    voices.forEach((_, i) => updateVoice(i, { gate: 0 }))
   }
 
   function getVoiceParams(index) {
@@ -62,12 +67,12 @@ export function useVoices(VOICE_COUNT = 8) {
   }
 
   function getVoiceParam(index, param) {
-    return el.meter({ name: `synth-voice-${index}-${param}` }, voices[index][param].ref || el.const({ value: voices[index][param].value }));
+    return el.meter({ name: `synth-voice-${index}-${param}` }, voices[index][param].ref || el.const({ value: voices[index][param].value }))
   }
 
   function findNextAvailableVoice(nextVoiceIndex) {
-    const startIndex = nextVoiceIndex.value;
-    let index = startIndex;
+    const startIndex = nextVoiceIndex.value
+    let index = startIndex
 
     do {
       if (voices[index].gate.value === 0) {
@@ -75,11 +80,11 @@ export function useVoices(VOICE_COUNT = 8) {
         return index;
       }
       index = (index + 1) % voices.length;
-    } while (index !== startIndex);
+    } while (index !== startIndex)
 
     nextVoiceIndex.value = (startIndex + 1) % voices.length;
     return startIndex;
   }
 
-  return { voices, initVoices, updateVoice, cycleNote, stopAll, getVoiceParams };
+  return { voices, initVoices, updateVoice, cycleNote, stopAll, getVoiceParams }
 }

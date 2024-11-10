@@ -1,20 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { onKeyDown } from '@vueuse/core';
 
 import ControlRotary from './components/ControlRotary.vue'
-import ElemFFT from './components/ElemFFT.vue';
-import ElemScope from './components/ElemScope.vue';
+import ShowFFT from './components/ShowFFT.vue';
+import ShowScope from './components/ShowScope.vue';
 
 import { useSynth } from './composables/useSynth';
 import { pitchColor } from './composables/calculations';
 import { useMidi } from './composables/useMidi';
 
-const { play, stop, stopAll, started, controls, groups, voices, } = useSynth()
+const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
 
-const { inputs, outputs, midi } = useMidi()
+const { inputs, midiLog, midiNote } = useMidi()
 
-const midiNote = ref(57)
+watch(midiNote, note => play(note.number, note.velocity))
 
 onKeyDown('Escape', () => { stopAll() })
 </script>
@@ -22,26 +22,35 @@ onKeyDown('Escape', () => { stopAll() })
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   .h-30
-    ElemScope
+    ShowScope
   .flex-1 
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
-    control-rotary.w-4em(
+    ControlRotary.w-4em(
       v-for="(control, c) in group"
       :key="c"
       v-model="controls[`${g}_${c}`]" 
       v-bind="control"
       :param="c")
   .flex.items-center
-    ControlRotary(v-model="midiNote" :min="10" :max="120" :step="1" param="MIDI")
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
-      @pointerdown="play(midiNote)" 
-      @pointerup="stop(midiNote)" ) {{ started ? 'Press to play sound' : 'Start' }}
+      @pointerdown="play(midiNote.number)" 
+      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex.flex-wrap.gap-2.items-center
     .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
-  .flex-1 {{ Object.values(inputs).map(i => i.name) }}
-  .flex-1 {{ midi }}
-  ElemFFT
+  .flex.flex-wrap.p-4 
+    .p-2.rounded-xl.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
+      .text-xs {{ input?.manufacturer }}
+      .text-xl {{ input.name }}
+  .flex-1 
+  ShowFFT
+  .bg-dark-300.p-2.flex.w-full.flex-col.max-h-20.gap-1 
+    .p-1.text-xs.flex.flex.items-center.gap-2(v-for="record in midiLog" :key="record") 
+      .uppercase {{ record.message.type }}
+      .i-la-cog(v-if="record.message.isSystemMessage")
+      .op-80(v-if="record.message.isChannelMessage") CH{{ record.message.channel }}
+      .op-80 {{ record.message.dataBytes[0] }}
+      .op-80 {{ record.message.dataBytes[1] }}
 </template>
 
 <style lang="postcss">
