@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue';
-import ControlRotary from './ControlRotary.vue'
-import ElemFFT from './ElemFFT.vue';
-import ElemScope from './ElemScope.vue';
-import { useSynth } from './useSynth';
-import { pitchColor } from './calculations';
 import { onKeyDown } from '@vueuse/core';
-import { useMidi } from './useMidi';
+
+import ControlRotary from './components/ControlRotary.vue'
+import ElemFFT from './components/ElemFFT.vue';
+import ElemScope from './components/ElemScope.vue';
+
+import { useSynth } from './composables/useSynth';
+import { pitchColor } from './composables/calculations';
+import { useMidi } from './composables/useMidi';
 
 const { play, stop, stopAll, started, controls, groups, voices, } = useSynth()
 

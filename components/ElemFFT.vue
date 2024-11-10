@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, reactive, computed } from 'vue';
-import { FFTs, meters } from './useSynth';
-import { freqColor } from './calculations';
+import { FFTs, meters } from '../composables/useSynth';
+import { freqColor } from '../composables/calculations';
 
 const props = defineProps({
   name: { default: 'main', type: String }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { scopes } from './useSynth';
+import { scopes } from '../composables/useSynth';
 
 const props = defineProps({
   name: { default: 'main', type: String },
