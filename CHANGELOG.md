@@ -1,3 +1,13 @@
+## v0.2.0 (2024-11-10)
+
+### New feature:
+
+- basic MIDI keyboard support([`3e3749a`](https://github.com/chromatone/elements/commit/3e3749aedee2851a14cf28123ce8d4631c82be00)) (by davay)
+- cleaner code structure([`b2c3293`](https://github.com/chromatone/elements/commit/b2c329390d43a7b0cc157ecd2b4da52c9c1408da)) (by davay)
+- basic webmidi support([`d6c621c`](https://github.com/chromatone/elements/commit/d6c621c3441a097c1a594bcb406e926e38d402e0)) (by davay)
+- stopAll on ESC press([`bd17f23`](https://github.com/chromatone/elements/commit/bd17f23fa61a7120a8730a5e3486479f59cf58ff)) (by davay)
+- cleaner voice generation([`5a49bad`](https://github.com/chromatone/elements/commit/5a49bad7e1db3a0f10f4baea71f0951848dc685e)) (by davay)
+
 
 ## v0.1.1 (2024-11-09)
 
