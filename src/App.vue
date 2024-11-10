@@ -6,17 +6,21 @@ import ElemScope from './ElemScope.vue';
 import { useSynth } from './useSynth';
 import { pitchColor } from './calculations';
 import { onKeyDown } from '@vueuse/core';
+import { useMidi } from './useMidi';
 
 const { play, stop, stopAll, started, controls, groups, voices, } = useSynth()
 
-const midi = ref(57)
+const { inputs, outputs, midi } = useMidi()
+
+const midiNote = ref(57)
 
 onKeyDown('Escape', () => { stopAll() })
 </script>
 
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
-  ElemScope()
+  .h-30
+    ElemScope
   .flex-1 
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
@@ -27,13 +31,14 @@ onKeyDown('Escape', () => { stopAll() })
       v-bind="control"
       :param="c")
   .flex.items-center
-    ControlRotary(v-model="midi" :min="10" :max="120" :step="1" param="MIDI")
+    ControlRotary(v-model="midiNote" :min="10" :max="120" :step="1" param="MIDI")
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
-      @pointerdown="play(midi)" 
-      @pointerup="stop(midi)" ) {{ started ? 'Press to play sound' : 'Start' }}
+      @pointerdown="play(midiNote)" 
+      @pointerup="stop(midiNote)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex.flex-wrap.gap-2.items-center
     .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
-  .flex-1
+  .flex-1 {{ Object.values(inputs).map(i => i.name) }}
+  .flex-1 {{ midi }}
   ElemFFT
 </template>
 

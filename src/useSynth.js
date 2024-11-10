@@ -7,8 +7,6 @@ import { srvb } from './srvb'
 import { useVoices } from './useVoices';
 import { useVoice } from './useVoice';
 
-
-
 const params = {
   "synth_vol": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
 
