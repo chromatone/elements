@@ -4,7 +4,6 @@ import { reactive, computed, watchEffect, onMounted, ref, watch, shallowReactive
 const inputs = shallowReactive({})
 const outputs = shallowReactive({})
 
-
 const midi = reactive({
   enabled: false,
   playing: false,
@@ -39,7 +38,20 @@ function initMidi() {
       forwarder: input.addForwarder(),
     }
     input.removeListener();
-    setupInputListeners(input);
+    Object.entries({
+      start: () => { midi.playing = true; midi.stopped = false; },
+      stop: () => { midi.playing = false; midi.stopped = Date.now(); },
+      // clock: handleClock(input),
+      // midimessage: handleMidiMessage(input),
+      // noteon: ev => inputs[input.id].note = noteInOn(ev),
+      // noteoff: ev => inputs[input.id].note = noteInOn(ev),
+      // controlchange: handleControlChange(input),
+      // channelaftertouch: handleMonoAftertouch(input),
+      // keyaftertouch: handlePolyAftertouch(input),
+      // pitchbend: handlePitchBend(input),
+    }).forEach(([event, handler]) => {
+      input.addListener(event, handler);
+    });
   })
   WebMidi.outputs.forEach(output => {
     outputs[output.id] = {
@@ -49,19 +61,5 @@ function initMidi() {
   })
 }
 
-function setupInputListeners(input) {
-  Object.entries({
-    start: () => { midi.playing = true; midi.stopped = false; },
-    stop: () => { midi.playing = false; midi.stopped = Date.now(); },
-    // clock: handleClock(input),
-    // midimessage: handleMidiMessage(input),
-    // noteon: ev => inputs[input.id].note = noteInOn(ev),
-    // noteoff: ev => inputs[input.id].note = noteInOn(ev),
-    // controlchange: handleControlChange(input),
-    // channelaftertouch: handleMonoAftertouch(input),
-    // keyaftertouch: handlePolyAftertouch(input),
-    // pitchbend: handlePitchBend(input),
-  }).forEach(([event, handler]) => {
-    input.addListener(event, handler);
-  });
-}
+
+
