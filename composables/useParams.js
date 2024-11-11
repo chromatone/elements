@@ -1,5 +1,5 @@
 import { el } from '@elemaudio/core'
-import { reactive, watch, ref, shallowReactive } from "vue";
+import { reactive, watch, ref, shallowReactive, computed } from "vue";
 import { useClamp } from "@vueuse/math";
 import { useStorage } from "@vueuse/core";
 
@@ -12,34 +12,44 @@ export function useParams(params, title = "ref") {
 
   let refsInitiated = false
 
-  for (let key in params) {
-    const param = params[key]
-    controls[key] = useClamp(
-      param?.nostore ? param.value : useStorage(`${title}:${key}`, param.value),
-      param.min,
-      param.max
-    )
-    if (param?.hidden) continue
-    const [group, name] = key.split("_")
-    if (!group || !name) continue
-    groups[group] = groups[group] || {}
-    groups[group][name] = param;
+  for (let g in params) {
+    const group = params[g]
+    for (let p in group) {
+      const param = group[p]
+      controls[g] = controls[g] || {}
+      controls[g][p] = useClamp(
+        param?.nostore ? param.value : useStorage(`${title}:${g}_${p}`, param.value),
+        param.min,
+        param.max
+      )
+      if (param?.hidden) continue
+      groups[g] = groups[g] || {}
+      groups[g][p] = param;
+    }
   }
 
   function initRefs(core) {
-    for (let key in params) {
-      let [node, setter] = core.createRef("const", { value: controls[key] }, [])
-      cv[key] = el.smooth(el.tau2pole(0.01), node)
-      setters[key] = setter
+    for (let g in params) {
+      const group = params[g]
+      for (let p in group) {
+        let [node, setter] = core.createRef("const", { value: controls[g][p] }, [])
+        cv[g] = cv[g] || {}
+        cv[g][p] = el.smooth(el.tau2pole(0.01), node)
+        setters[g] = setters[g] || {}
+        setters[g][p] = setter
+      }
     }
     refsInitiated = true
   }
 
   watch(() => ({ ...controls }), (c1, c2) => {
     if (!refsInitiated) return
-    for (let c in controls) {
-      if (c1[c] != c2[c]) {
-        setters[c]({ value: controls[c] });
+    for (let g in controls) {
+      const group = params[g]
+      for (let p in group) {
+        if (c1[g][p] != c2[g][p]) {
+          setters[g][p]({ value: controls[g][p] });
+        }
       }
     }
   })

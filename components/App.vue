@@ -30,7 +30,7 @@ onKeyDown('Escape', () => { stopAll() })
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
-  .flex.items-center
+  .flex.items-center {{ controls }}
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.z-1000( 
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
@@ -40,33 +40,33 @@ onKeyDown('Escape', () => { stopAll() })
       v-for="(group, g ) in groups" :key="group")
       .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
       button.ml-1.p-2.border-light-400.rounded-xl.border-1(
-        v-if="controls.hasOwnProperty(`${g}_on`)"
-        :class="{ 'bg-dark-400': controls[`${g}_on`] }"
-        @click="controls[`${g}_on`] == 0 ? controls[`${g}_on`] = 1 : controls[`${g}_on`] = 0")
+        v-if="controls[g].hasOwnProperty(`on`)"
+        :class="{ 'bg-dark-400': controls[g].on }"
+        @click="controls[g].on == 0 ? controls[g].on = 1 : controls[g].on = 0")
         .i-la-check
       template(
         v-for="(control, c) in group"
         :key="c"
         )
         ControlRotary.w-4em(
-          v-model="controls[`${g}_${c}`]" 
+          v-model="controls[g][c]" 
           v-bind="control"
           :param="c")
       ControlAdsr(
         v-if="['osc'].includes(g)"
         title="Amplitude Envelope"
-        v-model:a="controls[`${g}_attack`]"
-        v-model:d="controls[`${g}_decay`]"
-        v-model:s="controls[`${g}_sustain`]"
-        v-model:r="controls[`${g}_release`]"
+        v-model:a="controls[g].attack"
+        v-model:d="controls[g].decay"
+        v-model:s="controls[g].sustain"
+        v-model:r="controls[g].release"
         )
       ControlAdsr(
         v-if="['osc'].includes(g)"
           title="Filter Envelope"
-          v-model:a="controls[`${g}_fattack`]"
-          v-model:d="controls[`${g}_fdecay`]"
-          v-model:s="controls[`${g}_fsustain`]"
-          v-model:r="controls[`${g}_frelease`]"
+          v-model:a="controls[g].fattack"
+          v-model:d="controls[g].fdecay"
+          v-model:s="controls[g].fsustain"
+          v-model:r="controls[g].frelease"
         )
 
   .flex.flex-wrap.p-4 

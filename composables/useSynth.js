@@ -1,15 +1,16 @@
 import WebRenderer from '@elemaudio/web-renderer'
 import { el } from '@elemaudio/core'
 import { useClamp } from '@vueuse/math';
-
 import { ref, reactive } from "vue";
+
 import { useParams } from './useParams';
-import { srvb } from '../elements/srvb'
 import { useVoices } from './useVoices';
+import noteKeys from './noteKeys.json'
 
 import { createSubtractive, params } from '../elements/'
-import noteKeys from './noteKeys.json'
+
 import { pingPong } from '../elements/pingpong';
+import { srvb } from '../elements/srvb'
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -46,8 +47,8 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const signal = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => el.add(
-      createSubtractive(getVoiceParams(i), cv)
+    const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => el.add(
+      createSubtractive(getVoiceParams(i), cv.sub, cv.synth.bpm)
     )
     ))))
 
@@ -55,15 +56,15 @@ export function useSynth() {
 
     const analyzed = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, signal)))
 
-    const ping = pingPong([analyzed, analyzed], cv)
+    const ping = pingPong([analyzed, analyzed], cv.pingpong, cv.synth.bpm)
 
     const stereo = srvb({
       key: 'srvb',
       sampleRate: 48000,
-      size: cv.reverb_size,
-      decay: cv.reverb_decay,
-      mod: cv.reverb_mod,
-      mix: el.mul(cv.reverb_mix, cv.reverb_on),
+      size: cv.srvb.size,
+      decay: cv.srvb.decay,
+      mod: cv.srvb.mod,
+      mix: el.mul(cv.srvb.mix, cv.srvb.on),
     }, ...ping)
 
     core.render(...stereo)
