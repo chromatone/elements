@@ -12,6 +12,9 @@ import { useMidi } from '../composables/useMidi';
 import ControlAdsr from './ControlAdsr.vue';
 import MidiKeys from './MidiKeys.vue';
 
+
+
+
 const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
 
 const { inputs, midiLog, midiNote, activeNotes } = useMidi()
@@ -19,13 +22,15 @@ const { inputs, midiLog, midiNote, activeNotes } = useMidi()
 watch(midiNote, note => play(note.number, note.velocity))
 
 onKeyDown('Escape', () => { stopAll() })
+
 </script>
 
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   //- MidiKeys
-  .h-30
-    ShowScope
+  .h-30.relative 
+    ShowFFT
+    ShowScope.absolute.top-0.pointer-events-none
   .flex-1 
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
@@ -64,7 +69,6 @@ onKeyDown('Escape', () => { stopAll() })
       .text-xs {{ input?.manufacturer }}
       .text-xl {{ input.name }}
   .flex-1
-  ShowFFT
   .bg-dark-300.p-2.flex.w-full.flex-col.max-h-20.gap-1 
     .p-1.text-xs.flex.flex.items-center.gap-2(v-for="record in midiLog" :key="record") 
       .uppercase {{ record.message.type }}

@@ -1,5 +1,6 @@
 import WebRenderer from '@elemaudio/web-renderer'
 import { el } from '@elemaudio/core'
+import { useClamp } from '@vueuse/math';
 
 import { ref, reactive } from "vue";
 import { useParams } from './useParams';
@@ -8,6 +9,7 @@ import { useVoices } from './useVoices';
 import { useVoice } from './useVoice';
 
 import params from './params.json'
+import noteKeys from './noteKeys.json'
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -72,7 +74,24 @@ export function useSynth() {
 
   function stop(midi = 57) { cycleNote(midi, 0) }
 
-  return { controls, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
+
+  const keyOffset = useClamp(2, 0, 4)
+
+  document.addEventListener('keydown', e => {
+    if (e.code == 'Digit1') keyOffset.value--
+    if (e.code == 'Equal') keyOffset.value++
+    if (e.repeat || !noteKeys[e.code]) return
+    if (e.ctrlKey || e.altKey || e.metaKey) return
+    if (e.code == 'Slash') e.preventDefault()
+    play(noteKeys[e.code] + keyOffset.value * 12, 1)
+  })
+
+  document.addEventListener('keyup', e => {
+    if (!noteKeys[e.code]) return
+    stop(noteKeys[e.code] + keyOffset.value * 12)
+  })
+
+  return { controls, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
 }
 
 

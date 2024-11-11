@@ -3,7 +3,7 @@
 import { computed, ref, watch } from 'vue';
 import { useGesture } from '@vueuse/gesture';
 import { useClamp } from '@vueuse/math'
-import { useStorage, useWindowSize } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 import { ScaleType } from 'tonal'
 
 import { useMidi } from '../composables/useMidi.js'
@@ -15,16 +15,12 @@ import MidiKeysNote from './MidiKeysNote.vue';
 
 
 const props = defineProps({
-  width: { type: Number },
-  height: { type: Number },
-  controlOffset: { type: Number, default: 100 },
-  slotOffset: { type: Number, default: 0 }
+  width: { type: Number, default: 400 },
+  height: { type: Number, defual: 150 },
+  controlOffset: { type: Number, default: 200 },
+  slotOffset: { type: Number, default: 100 }
 })
 
-const win = useWindowSize()
-
-const width = computed(() => props.width || win.width.value)
-const height = computed(() => props.height || win.height.value - 80)
 
 const { activeNotes } = useMidi()
 
