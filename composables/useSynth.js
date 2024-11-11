@@ -7,15 +7,7 @@ import { srvb } from './srvb'
 import { useVoices } from './useVoices';
 import { useVoice } from './useVoice';
 
-const params = {
-  "synth_vol": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
-
-  "reverb_on": { "value": 1, "min": 0, "max": 1, "step": 1, "hidden": true },
-  "reverb_size": { "value": 0.2, "min": 0, "max": 1, "step": 0.01 },
-  "reverb_decay": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
-  "reverb_mod": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
-  "reverb_mix": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 }
-}
+import params from './params.json'
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -52,7 +44,7 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const sound = el.tanh(el.add(...voices.map((_, i) => useVoice(getVoiceParams(i), cv))))
+    const sound = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => useVoice(i, getVoiceParams(i), cv)))))
 
     const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 

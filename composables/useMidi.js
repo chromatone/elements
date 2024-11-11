@@ -1,6 +1,5 @@
-import { WebMidi, Note, Utilities } from "webmidi";
-import { reactive, computed, watchEffect, onMounted, ref, watch, shallowReactive } from 'vue';
-import { timestamp } from "@vueuse/core";
+import { WebMidi } from "webmidi";
+import { reactive, onMounted, shallowReactive } from 'vue';
 
 const inputs = shallowReactive({})
 const outputs = shallowReactive({})
@@ -60,37 +59,27 @@ function initMidi() {
       midiLog.unshift({ timestamp, message })
       if (midiLog.length > 100) midiLog.pop()
     })
+
     input.addListener('noteon', onNote)
     input.addListener('noteoff', onNote)
 
-    function onNote(ev) {
-      console.log(ev)
-      const { note: { number, attack }, message: { channel }, timestamp, port: { id } } = ev
+    function onNote({ type, note: { number, attack }, message: { channel }, timestamp, port: { id } }) {
       Object.assign(midiNote, {
         number,
-        velocity: attack,
+        velocity: type == 'noteoff' ? 0 : attack,
         channel,
         timestamp,
         port: id
       })
     }
 
-    Object.entries({
 
-      // clock: handleClock(input),
-      noteon: ev => {
 
-      },
-      // noteoff: ev => inputs[input.id].note = noteInOn(ev),
-      // controlchange: handleControlChange(input),
-      // channelaftertouch: handleMonoAftertouch(input),
-      // keyaftertouch: handlePolyAftertouch(input),
-      pitchbend: ev => {
+    // controlchange: handleControlChange(input),
+    // channelaftertouch: handleMonoAftertouch(input),
+    // keyaftertouch: handlePolyAftertouch(input),
+    // pitchbend: ev => {     },
 
-      },
-    }).forEach(([event, handler]) => {
-      input.addListener(event, handler);
-    });
   })
   WebMidi.outputs.forEach(output => {
     outputs[output.id] = {
