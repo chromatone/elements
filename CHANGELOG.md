@@ -1,3 +1,14 @@
+## v0.2.1 (2024-11-12)
+
+### New feature:
+
+- ping pong delay([`d609153`](https://github.com/chromatone/elements/commit/d6091536cfc5ef88f8d88ca1fd959c4a63a559d8)) (by davay)
+- clean params for rapid prototyping([`8129299`](https://github.com/chromatone/elements/commit/8129299dc6421ff1bb872071aff8f63f94b37d61)) (by davay)
+- params along with elements code - very convenient for prototyping([`3227e11`](https://github.com/chromatone/elements/commit/3227e11eb260f86d8abcbbd760cdf71be13180ec)) (by davay)
+- keyboard is playing notes([`96ec410`](https://github.com/chromatone/elements/commit/96ec410bd4c1ddb4f4ca3d20eedac5420e03843d)) (by davay)
+- rich oscillator and MIDI support([`3c43aa6`](https://github.com/chromatone/elements/commit/3c43aa62a3555c4444ae994ee8e8ae6be033abe5)) (by davay)
+- rich fat oscillator as the first element([`4560449`](https://github.com/chromatone/elements/commit/45604494df3bf3d98b9841a60d7bfda740121fae)) (by davay)
+
 ## v0.2.0 (2024-11-10)
 
 ### New feature:
