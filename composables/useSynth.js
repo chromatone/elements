@@ -30,6 +30,8 @@ export function useSynth() {
   async function start() {
 
     if (initiated.value) return
+    initiated.value = true
+
     ctx = new (window.AudioContext || window.webkitAudioContext)()
     if (ctx.state === 'suspended') await ctx.resume()
     core = new WebRenderer()
@@ -68,8 +70,6 @@ export function useSynth() {
     }, ...ping)
 
     core.render(...stereo)
-
-    initiated.value = true
     started.value = true
   }
 
