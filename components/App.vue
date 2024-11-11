@@ -12,12 +12,9 @@ import { useMidi } from '../composables/useMidi';
 import ControlAdsr from './ControlAdsr.vue';
 import MidiKeys from './MidiKeys.vue';
 
-
-
-
 const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
 
-const { inputs, midiLog, midiNote, activeNotes } = useMidi()
+const { inputs, midiLog, midiNote } = useMidi()
 
 watch(midiNote, note => play(note.number, note.velocity))
 
@@ -32,8 +29,13 @@ onKeyDown('Escape', () => { stopAll() })
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
   .flex-1 
-  .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
+  .relative.flex.flex-wrap.items-center.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
+    button.ml-1.p-2.border-light-400.rounded-xl.border-1(
+      v-if="['osc', 'reverb'].includes(g)"
+      :class="{ 'bg-dark-400': controls[`${g}_on`] }"
+      @click="controls[`${g}_on`] == 0 ? controls[`${g}_on`] = 1 : controls[`${g}_on`] = 0")
+      .i-la-check
     template(
       v-for="(control, c) in group"
       :key="c"
@@ -44,11 +46,11 @@ onKeyDown('Escape', () => { stopAll() })
         :param="c")
     ControlAdsr(
       v-if="['osc'].includes(g)"
-        title="Amplitude Envelope"
-        v-model:a="controls[`${g}_attack`]"
-        v-model:d="controls[`${g}_decay`]"
-        v-model:s="controls[`${g}_sustain`]"
-        v-model:r="controls[`${g}_release`]"
+      title="Amplitude Envelope"
+      v-model:a="controls[`${g}_attack`]"
+      v-model:d="controls[`${g}_decay`]"
+      v-model:s="controls[`${g}_sustain`]"
+      v-model:r="controls[`${g}_release`]"
       )
     ControlAdsr(
       v-if="['osc'].includes(g)"
