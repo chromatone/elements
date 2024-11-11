@@ -6,9 +6,8 @@ import { ref, reactive } from "vue";
 import { useParams } from './useParams';
 import { srvb } from '../elements/srvb'
 import { useVoices } from './useVoices';
-import { useVoice } from './useVoice';
 
-import params from './params.json'
+import { createSubtractive, params } from '../elements/'
 import noteKeys from './noteKeys.json'
 
 export const meters = reactive({})
@@ -46,11 +45,16 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const sound = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => useVoice(i, getVoiceParams(i), cv)))))
+    const signal = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => {
+      const { gate, midi, vel } = getVoiceParams(i)
+      return el.add(
+        createSubtractive({ gate, freq: midiFrequency(midi), vel }, cv)
+      )
+    }))))
 
     const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 
-    const signal = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, sound)))
+    const analyzed = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, signal)))
 
     const stereo = srvb({
       key: 'srvb',
@@ -59,7 +63,7 @@ export function useSynth() {
       decay: cv.reverb_decay,
       mod: cv.reverb_mod,
       mix: el.mul(cv.reverb_mix, cv.reverb_on),
-    }, signal, signal)
+    }, analyzed, analyzed)
 
     core.render(...stereo)
 
@@ -95,5 +99,4 @@ export function useSynth() {
 }
 
 
-
-
+export const midiFrequency = x => el.mul(440, el.pow(2, el.smooth(el.tau2pole(0.001), el.div(el.sub(x, 69), 12))))

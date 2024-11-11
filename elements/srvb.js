@@ -161,3 +161,11 @@ export function srvb(props, xl, xr) {
     el.select(mix, yr, xr),
   ];
 }
+
+export const params = {
+  "reverb_on": { "value": 1, "min": 0, "max": 1, "step": 1, "hidden": true },
+  "reverb_size": { "value": 0.2, "min": 0, "max": 1, "step": 0.01 },
+  "reverb_decay": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
+  "reverb_mod": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
+  "reverb_mix": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 }
+}
