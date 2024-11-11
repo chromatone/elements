@@ -25,13 +25,13 @@ onKeyDown('Escape', () => { stopAll() })
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   //- MidiKeys
-  .h-30.relative 
+  .relative.-z-10
     .flex.flex-wrap.gap-2.items-center.absolute.top-0.w-full
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
   .flex.items-center
-    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
+    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.z-1000( 
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex.flex-wrap.gap-2
@@ -93,7 +93,7 @@ a {
 }
 
 body {
-  @apply flex items-stretch justify-stretch h-100svh;
+  @apply flex items-stretch justify-stretch;
   background-color: #444;
   width: 100%;
   min-width: 320px;
@@ -111,6 +111,5 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
-  overflow: hidden;
 }
 </style>
