@@ -26,46 +26,49 @@ onKeyDown('Escape', () => { stopAll() })
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   //- MidiKeys
   .h-30.relative 
+    .flex.flex-wrap.gap-2.items-center.absolute.top-0.w-full
+      .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
-  .flex-1 
-  .relative.flex.flex-wrap.items-center.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
-    .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
-    button.ml-1.p-2.border-light-400.rounded-xl.border-1(
-      v-if="['osc', 'reverb'].includes(g)"
-      :class="{ 'bg-dark-400': controls[`${g}_on`] }"
-      @click="controls[`${g}_on`] == 0 ? controls[`${g}_on`] = 1 : controls[`${g}_on`] = 0")
-      .i-la-check
-    template(
-      v-for="(control, c) in group"
-      :key="c"
-      )
-      ControlRotary.w-4em(
-        v-model="controls[`${g}_${c}`]" 
-        v-bind="control"
-        :param="c")
-    ControlAdsr(
-      v-if="['osc'].includes(g)"
-      title="Amplitude Envelope"
-      v-model:a="controls[`${g}_attack`]"
-      v-model:d="controls[`${g}_decay`]"
-      v-model:s="controls[`${g}_sustain`]"
-      v-model:r="controls[`${g}_release`]"
-      )
-    ControlAdsr(
-      v-if="['osc'].includes(g)"
-        title="Filter Envelope"
-        v-model:a="controls[`${g}_fattack`]"
-        v-model:d="controls[`${g}_fdecay`]"
-        v-model:s="controls[`${g}_fsustain`]"
-        v-model:r="controls[`${g}_frelease`]"
-      )
   .flex.items-center
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
-  .flex.flex-wrap.gap-2.items-center
-    .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
+  .flex.flex-wrap.gap-2
+    .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
+      style="flex: 1 1 100px"
+      v-for="(group, g ) in groups" :key="group")
+      .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
+      button.ml-1.p-2.border-light-400.rounded-xl.border-1(
+        v-if="controls.hasOwnProperty(`${g}_on`)"
+        :class="{ 'bg-dark-400': controls[`${g}_on`] }"
+        @click="controls[`${g}_on`] == 0 ? controls[`${g}_on`] = 1 : controls[`${g}_on`] = 0")
+        .i-la-check
+      template(
+        v-for="(control, c) in group"
+        :key="c"
+        )
+        ControlRotary.w-4em(
+          v-model="controls[`${g}_${c}`]" 
+          v-bind="control"
+          :param="c")
+      ControlAdsr(
+        v-if="['osc'].includes(g)"
+        title="Amplitude Envelope"
+        v-model:a="controls[`${g}_attack`]"
+        v-model:d="controls[`${g}_decay`]"
+        v-model:s="controls[`${g}_sustain`]"
+        v-model:r="controls[`${g}_release`]"
+        )
+      ControlAdsr(
+        v-if="['osc'].includes(g)"
+          title="Filter Envelope"
+          v-model:a="controls[`${g}_fattack`]"
+          v-model:d="controls[`${g}_fdecay`]"
+          v-model:s="controls[`${g}_fsustain`]"
+          v-model:r="controls[`${g}_frelease`]"
+        )
+
   .flex.flex-wrap.p-4 
     .p-2.rounded-xl.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
       .text-xs {{ input?.manufacturer }}

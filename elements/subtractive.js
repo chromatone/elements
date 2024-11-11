@@ -1,9 +1,12 @@
+import { midiFrequency } from "./midi";
 import { el } from "@elemaudio/core";
 
 export const params = {
   osc_on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   osc_gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
   osc_shape: { value: 0.2, min: 0, max: 1, step: 0.01, },
+  osc_vibdep: { value: 0.1, min: 0, max: .5, step: 0.01, fixed: 2 },
+  osc_vibrate: { value: 2, min: 1, max: 8, step: 0.01, },
   osc_cutoff: { value: 200, min: 10, max: 20000, step: 1, },
   osc_cutq: { value: 1.1, min: 0, max: 5, step: 0.1, },
   osc_attack: { value: 1, min: 0.01, max: 10, step: 0.01, hidden: true, },
@@ -17,37 +20,44 @@ export const params = {
   osc_frelease: { value: 1, min: 0.01, max: 10, step: 0.1, hidden: true, },
 };
 
-export function createSubtractive({ gate, freq, vel }, cv) {
+export function createSubtractive({ gate, midi, vel }, cv) {
+
+  const freq = midiFrequency(el.add(midi,
+    el.mul(cv.osc_vibdep,
+      el.cycle(
+        el.mul(
+          cv.osc_vibrate,
+          el.div(cv.synth_bpm, 60))))))
+
   const squareOsc = el.blepsquare(freq);
   const sawOsc = el.blepsaw(freq);
 
+  let rate = el.div(15, cv.synth_bpm)
+
   const envelope = el.adsr(
-    el.div(el.mul(15, cv.osc_attack), cv.synth_bpm),
-    el.div(el.mul(15, cv.osc_decay), cv.synth_bpm),
+    el.mul(cv.osc_attack, rate),
+    el.mul(cv.osc_decay, rate),
     cv.osc_sustain,
-    el.div(el.mul(15, cv.osc_release), cv.synth_bpm),
+    el.mul(cv.osc_release, rate),
     gate
   );
 
   const filterEnvelope = el.adsr(
-    el.div(el.mul(15, cv.osc_fattack), cv.synth_bpm),
-    el.div(el.mul(15, cv.osc_fdecay), cv.synth_bpm),
+    el.mul(cv.osc_fattack, rate),
+    el.mul(cv.osc_fdecay, rate),
     cv.osc_fsustain,
-    el.div(el.mul(15, cv.osc_frelease), cv.synth_bpm),
+    el.mul(cv.osc_frelease, rate),
     gate
   );
 
-  const squareGain = el.cos(el.mul(cv.osc_shape, Math.PI / 2));
-  const sawGain = el.sin(el.mul(cv.osc_shape, Math.PI / 2));
-
-  const oscillator = el.add(
-    el.mul(squareGain, squareOsc),
-    el.mul(sawGain, sawOsc)
-  );
+  const oscillator = el.mul(envelope, el.add(
+    el.mul(el.cos(el.mul(cv.osc_shape, Math.PI / 2)), squareOsc),
+    el.mul(el.sin(el.mul(cv.osc_shape, Math.PI / 2)), sawOsc)
+  ))
 
   const filterCutoff = el.add(
     cv.osc_cutoff,
-    el.mul(el.mul(cv.osc_fenv, cv.osc_cutoff), filterEnvelope)
+    el.mul(cv.osc_cutoff, el.mul(cv.osc_fenv, filterEnvelope))
   );
 
   const filter = el.lowpass(
@@ -56,7 +66,7 @@ export function createSubtractive({ gate, freq, vel }, cv) {
     oscillator
   );
 
-  return el.tanh(el.mul(cv.osc_on, cv.osc_gain, envelope, vel, filter));
+  return el.tanh(el.mul(cv.osc_on, cv.osc_gain, vel, filter));
 }
 
 

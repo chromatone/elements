@@ -9,6 +9,7 @@ import { useVoices } from './useVoices';
 
 import { createSubtractive, params } from '../elements/'
 import noteKeys from './noteKeys.json'
+import { pingPong } from '../elements/pingpong';
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -45,16 +46,16 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const signal = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => {
-      const { gate, midi, vel } = getVoiceParams(i)
-      return el.add(
-        createSubtractive({ gate, freq: midiFrequency(midi), vel }, cv)
-      )
-    }))))
+    const signal = el.tanh(el.mul(cv.synth_vol, el.add(...voices.map((_, i) => el.add(
+      createSubtractive(getVoiceParams(i), cv)
+    )
+    ))))
 
     const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
 
     const analyzed = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, signal)))
+
+    const ping = pingPong([analyzed, analyzed], cv)
 
     const stereo = srvb({
       key: 'srvb',
@@ -63,7 +64,7 @@ export function useSynth() {
       decay: cv.reverb_decay,
       mod: cv.reverb_mod,
       mix: el.mul(cv.reverb_mix, cv.reverb_on),
-    }, analyzed, analyzed)
+    }, ...ping)
 
     core.render(...stereo)
 
@@ -97,6 +98,3 @@ export function useSynth() {
 
   return { controls, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
 }
-
-
-export const midiFrequency = x => el.mul(440, el.pow(2, el.smooth(el.tau2pole(0.001), el.div(el.sub(x, 69), 12))))
