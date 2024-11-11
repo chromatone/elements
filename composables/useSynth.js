@@ -3,7 +3,7 @@ import { el } from '@elemaudio/core'
 
 import { ref, reactive } from "vue";
 import { useParams } from './useParams';
-import { srvb } from './srvb'
+import { srvb } from '../elements/srvb'
 import { useVoices } from './useVoices';
 import { useVoice } from './useVoice';
 

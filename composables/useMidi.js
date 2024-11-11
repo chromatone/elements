@@ -18,11 +18,13 @@ const midiNote = reactive({
   port: null
 })
 
+const activeNotes = reactive({})
+
 const midiLog = shallowReactive([])
 
 export function useMidi() {
   onMounted(() => setupMidi())
-  return { midi, inputs, outputs, WebMidi, midiLog, midiNote }
+  return { midi, inputs, outputs, WebMidi, midiLog, midiNote, activeNotes }
 }
 
 function setupMidi() {
@@ -64,16 +66,16 @@ function initMidi() {
     input.addListener('noteoff', onNote)
 
     function onNote({ type, note: { number, attack }, message: { channel }, timestamp, port: { id } }) {
+      const velocity = type == 'noteoff' ? 0 : attack
       Object.assign(midiNote, {
         number,
-        velocity: type == 'noteoff' ? 0 : attack,
+        velocity,
         channel,
         timestamp,
         port: id
       })
+      activeNotes[number] = velocity
     }
-
-
 
     // controlchange: handleControlChange(input),
     // channelaftertouch: handleMonoAftertouch(input),

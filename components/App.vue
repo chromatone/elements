@@ -2,17 +2,19 @@
 import { ref, watch } from 'vue';
 import { onKeyDown } from '@vueuse/core';
 
-import ControlRotary from './components/ControlRotary.vue'
-import ShowFFT from './components/ShowFFT.vue';
-import ShowScope from './components/ShowScope.vue';
+import ControlRotary from './ControlRotary.vue'
+import ShowFFT from './ShowFFT.vue';
+import ShowScope from './ShowScope.vue';
 
-import { useSynth } from './composables/useSynth';
-import { pitchColor } from './composables/calculations';
-import { useMidi } from './composables/useMidi';
+import { useSynth } from '../composables/useSynth';
+import { pitchColor } from '../composables/calculations';
+import { useMidi } from '../composables/useMidi';
+import ControlAdsr from './ControlAdsr.vue';
+import MidiKeys from './MidiKeys.vue';
 
 const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
 
-const { inputs, midiLog, midiNote } = useMidi()
+const { inputs, midiLog, midiNote, activeNotes } = useMidi()
 
 watch(midiNote, note => play(note.number, note.velocity))
 
@@ -21,17 +23,36 @@ onKeyDown('Escape', () => { stopAll() })
 
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
+  //- MidiKeys
   .h-30
     ShowScope
   .flex-1 
   .relative.flex.flex-wrap.gap-2.border-1.rounded-xl(v-for="(group, g ) in groups" :key="group")
     .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
-    ControlRotary.w-4em(
+    template(
       v-for="(control, c) in group"
       :key="c"
-      v-model="controls[`${g}_${c}`]" 
-      v-bind="control"
-      :param="c")
+      )
+      ControlRotary.w-4em(
+        v-model="controls[`${g}_${c}`]" 
+        v-bind="control"
+        :param="c")
+    ControlAdsr(
+      v-if="['osc'].includes(g)"
+        title="Amplitude Envelope"
+        v-model:a="controls[`${g}_attack`]"
+        v-model:d="controls[`${g}_decay`]"
+        v-model:s="controls[`${g}_sustain`]"
+        v-model:r="controls[`${g}_release`]"
+      )
+    ControlAdsr(
+      v-if="['osc'].includes(g)"
+        title="Filter Envelope"
+        v-model:a="controls[`${g}_fattack`]"
+        v-model:d="controls[`${g}_fdecay`]"
+        v-model:s="controls[`${g}_fsustain`]"
+        v-model:r="controls[`${g}_frelease`]"
+      )
   .flex.items-center
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl( 
       @pointerdown="play(midiNote.number)" 
@@ -42,7 +63,7 @@ onKeyDown('Escape', () => { stopAll() })
     .p-2.rounded-xl.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
       .text-xs {{ input?.manufacturer }}
       .text-xl {{ input.name }}
-  .flex-1 
+  .flex-1
   ShowFFT
   .bg-dark-300.p-2.flex.w-full.flex-col.max-h-20.gap-1 
     .p-1.text-xs.flex.flex.items-center.gap-2(v-for="record in midiLog" :key="record") 

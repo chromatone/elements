@@ -1,9 +1,6 @@
-/**
- * @module Calculations
- * @description All the basic math for note-frequency convertion
- */
-
 export const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
+
+export const intervals = ['1P', '2m', '2M', '3m', '3M', '4P', 'TT', '5P', '6m', '6M', '7m', '7M']
 
 
 export function midiColor(note, velocity, alpha) {
