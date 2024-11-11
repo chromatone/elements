@@ -42,17 +42,15 @@ export function useParams(params, title = "ref") {
     refsInitiated = true
   }
 
-  watch(() => ({ ...controls }), (c1, c2) => {
+  watch(() => ({ ...controls }), () => {
     if (!refsInitiated) return
     for (let g in controls) {
       const group = params[g]
       for (let p in group) {
-        if (c1[g][p] != c2[g][p]) {
-          setters[g][p]({ value: controls[g][p] });
-        }
+        setters[g][p]({ value: controls[g][p] });
       }
     }
-  })
+  }, { deep: true })
 
   return { controls, cv, setters, groups, initRefs }
 }

@@ -30,7 +30,7 @@ onKeyDown('Escape', () => { stopAll() })
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
-  .flex.items-center {{ controls }}
+  .flex.items-center
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.z-1000( 
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
