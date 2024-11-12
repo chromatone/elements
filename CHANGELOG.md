@@ -1,3 +1,18 @@
+## v0.3.2 (2024-11-12)
+
+### New feature:
+
+- 9 voices([`5bd8e78`](https://github.com/chromatone/elements/commit/5bd8e78bc8aa3ef778855f48d159433502d21b9a)) (by davay)
+- Screen keyboard available([`4c16fea`](https://github.com/chromatone/elements/commit/4c16fea48f667badad5b4414dcb9df64e764328f)) (by davay)
+- ROUND oscillator - sine/triangle([`b12e4f2`](https://github.com/chromatone/elements/commit/b12e4f23c8f922e728f38063ef967ca5b49b6d14)) (by davay)
+- toggle layers UI tabs([`61d785a`](https://github.com/chromatone/elements/commit/61d785abef0e2071feff3f2049c805afb289a258)) (by davay)
+
+## v0.3.1 (2024-11-12)
+
+### New feature:
+
+- string, noise, sampler added, all layers ported from center([`1f5d935`](https://github.com/chromatone/elements/commit/1f5d935619bfcb907b7ed30b5fdd90951edc1e5e)) (by davay)
+
 ## v0.3.0 (2024-11-12)
 
 ### New feature:
