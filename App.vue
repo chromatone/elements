@@ -11,6 +11,8 @@ import { useSynth } from './composables/useSynth';
 import { pitchColor } from './composables/calculations';
 import { useMidi } from './composables/useMidi';
 
+import { version } from './package.json'
+
 // import MidiKeys from './components/MidiKeys.vue';
 
 const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
@@ -49,7 +51,6 @@ onKeyDown('Escape', () => { stopAll() })
         v-for="(control, c) in group"
         :key="c"
         )
-        p {{ g }}
         ControlRotary.w-4em(
           v-model="controls[g][c]" 
           v-bind="control"
@@ -64,11 +65,11 @@ onKeyDown('Escape', () => { stopAll() })
         )
       ControlAdsr(
         v-if="controls[g].fattack"
-          title="Filter Envelope"
-          v-model:a="controls[g].fattack"
-          v-model:d="controls[g].fdecay"
-          v-model:s="controls[g].fsustain"
-          v-model:r="controls[g].frelease"
+        title="Filter Envelope"
+        v-model:a="controls[g].fattack"
+        v-model:d="controls[g].fdecay"
+        v-model:s="controls[g].fsustain"
+        v-model:r="controls[g].frelease"
         )
 
   .flex.flex-wrap.p-4 
@@ -83,6 +84,7 @@ onKeyDown('Escape', () => { stopAll() })
       .op-80(v-if="record.message.isChannelMessage") CH{{ record.message.channel }}
       .op-80 {{ record.message.dataBytes[0] }}
       .op-80 {{ record.message.dataBytes[1] }}
+.bg-dark-800.bg-op-40.p-1 v.{{ version }}
 </template>
 
 <style lang="postcss">
@@ -97,7 +99,7 @@ a {
 body {
   @apply flex items-stretch justify-stretch;
   background-color: #444;
-  touch-action: manipulation;
+
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
@@ -114,5 +116,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 </style>
