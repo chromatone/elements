@@ -2,15 +2,16 @@
 import { ref, watch } from 'vue';
 import { onKeyDown } from '@vueuse/core';
 
-import ControlRotary from './ControlRotary.vue'
-import ShowFFT from './ShowFFT.vue';
-import ShowScope from './ShowScope.vue';
+import ControlRotary from './components/ControlRotary.vue'
+import ControlAdsr from './components/ControlAdsr.vue';
+import ShowFFT from './components/ShowFFT.vue';
+import ShowScope from './components/ShowScope.vue';
 
-import { useSynth } from '../composables/useSynth';
-import { pitchColor } from '../composables/calculations';
-import { useMidi } from '../composables/useMidi';
-import ControlAdsr from './ControlAdsr.vue';
-import MidiKeys from './MidiKeys.vue';
+import { useSynth } from './composables/useSynth';
+import { pitchColor } from './composables/calculations';
+import { useMidi } from './composables/useMidi';
+
+// import MidiKeys from './components/MidiKeys.vue';
 
 const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
 

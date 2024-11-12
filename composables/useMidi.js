@@ -23,24 +23,25 @@ const activeNotes = reactive({})
 const midiLog = shallowReactive([])
 
 export function useMidi() {
-  onMounted(() => setupMidi())
+  onMounted(() => {
+    if (midi.enabled || midi.enabled === null) return
+    WebMidi.enable().then(() => {
+      midi.enabled = true
+      initMidi()
+      WebMidi.addListener("connected", initMidi)
+      WebMidi.addListener("disconnected", e => {
+        if (e.port.type == 'input') {
+          delete inputs[e.port.id]
+        } else if (e.port.type == 'output') {
+          delete outputs[e.port.id]
+        }
+      })
+    }).catch(e => midi.enabled = null)
+  })
   return { midi, inputs, outputs, WebMidi, midiLog, midiNote, activeNotes }
 }
 
-function setupMidi() {
-  WebMidi.enable().then(() => {
-    midi.enabled = true
-    initMidi()
-    WebMidi.addListener("connected", initMidi)
-    WebMidi.addListener("disconnected", e => {
-      if (e.port.type == 'input') {
-        delete inputs[e.port.id]
-      } else if (e.port.type == 'output') {
-        delete outputs[e.port.id]
-      }
-    })
-  }).catch(e => console.log(e))
-}
+
 
 function initMidi() {
   WebMidi.inputs.forEach(input => {
