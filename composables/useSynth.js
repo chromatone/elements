@@ -7,11 +7,16 @@ import { useParams } from './useParams';
 import { useVoices } from './useVoices';
 import noteKeys from './noteKeys.json'
 
-import { createSubtractive, params } from '../elements/'
+import { params } from '../elements/'
 
 import { pingPong } from '../elements/pingpong';
 import { srvb } from '../elements/srvb'
 import { useMidi } from './useMidi';
+
+import { createNoise } from '../elements/noise';
+import { createSubtractive } from '../elements/subtractive';
+import { createString } from '../elements/string';
+import { createSampler } from '../elements/sampler';
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -49,13 +54,24 @@ export function useSynth() {
     initVoices(core)
 
 
+    let res = await fetch('/A4.mp3')
+    let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer())
+    core.updateVirtualFileSystem({
+      'piano': sampleBuffer.getChannelData(0),
+    })
+
+
+
     core.on('meter', (e) => meters[e.source] = { max: e.max, min: e.min })
     core.on('scope', (e) => scopes[e.source] = Array.from(e?.data[0].values()))
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
     const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => el.add(
-      createSubtractive(getVoiceParams(i), cv.sub, cv.synth.bpm)
+      createSubtractive(getVoiceParams(i), cv.sub, cv.synth.bpm),
+      createNoise(getVoiceParams(i), cv.noise, cv.synth.bpm),
+      createString(getVoiceParams(i), cv.string, cv.synth.bpm),
+      createSampler(getVoiceParams(i), cv.sampler, cv.synth.bpm)
     )
     ))))
 

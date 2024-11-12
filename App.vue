@@ -34,12 +34,12 @@ onKeyDown('Escape', () => { stopAll() })
     ShowFFT.h-40
     ShowScope.absolute.top-0.pointer-events-none
   .flex.items-center.z-1000
-    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
+    button.text-xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
       @pointerdown="play(midiNote.number)" 
-      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}!!
+      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex.flex-wrap.gap-2
     .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
-      style="flex: 1 1 100px"
+
       v-for="(group, g ) in groups" :key="group")
       .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
       button.ml-1.p-2.border-light-400.rounded-xl.border-1(
@@ -51,26 +51,27 @@ onKeyDown('Escape', () => { stopAll() })
         v-for="(control, c) in group"
         :key="c"
         )
-        ControlRotary.w-4em(
+        ControlRotary.w-4em.flex-1(
           v-model="controls[g][c]" 
           v-bind="control"
           :param="c")
-      ControlAdsr(
-        v-if="controls[g].attack"
-        title="Amplitude Envelope"
-        v-model:a="controls[g].attack"
-        v-model:d="controls[g].decay"
-        v-model:s="controls[g].sustain"
-        v-model:r="controls[g].release"
-        )
-      ControlAdsr(
-        v-if="controls[g].fattack"
-        title="Filter Envelope"
-        v-model:a="controls[g].fattack"
-        v-model:d="controls[g].fdecay"
-        v-model:s="controls[g].fsustain"
-        v-model:r="controls[g].frelease"
-        )
+      .flex.flex-wrap.flex-1
+        ControlAdsr(
+          v-if="controls[g].attack"
+          title="Amplitude Envelope"
+          v-model:a="controls[g].attack"
+          v-model:d="controls[g].decay"
+          v-model:s="controls[g].sustain"
+          v-model:r="controls[g].release"
+          )
+        ControlAdsr(
+          v-if="controls[g].fattack"
+          title="Filter Envelope"
+          v-model:a="controls[g].fattack"
+          v-model:d="controls[g].fdecay"
+          v-model:s="controls[g].fsustain"
+          v-model:r="controls[g].frelease"
+          )
 
   .flex.flex-wrap.p-4 
     .p-2.rounded-xl.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
