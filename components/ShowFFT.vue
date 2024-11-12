@@ -8,10 +8,9 @@ const props = defineProps({
 })
 
 const FFT = reactive({
-  sr: computed(() => meters['sample-rate']?.max || 44100),
+  sr: computed(() => meters.sample_rate?.max || 48000),
   data: computed(() => FFTs?.[props.name] || [[], []]),
   freq: computed(() => FFT.data[0].map((val, v) => v * FFT.sr / (FFT.data[0].length || 1))),
-  colors: computed(() => FFT.freq.map(f => freqColor(f))),
   total: computed(() => FFT.data[0].map((val, v) => Math.log2(1 + Math.abs(val) + Math.abs(FFT.data[1][v])))),
 })
 
@@ -34,7 +33,7 @@ function draw() {
     let nextX = Math.log2(i + 2) * canvas.value.width / Math.log2(FFT.total.length + 1);
     let barWidth = nextX - x;
     let y = canvas.value.height - barHeight;
-    context.fillStyle = FFT.colors[i];
+    context.fillStyle = freqColor(FFT.freq[i], value);
     context.fillRect(x, y, barWidth, barHeight);
   }
 
@@ -44,6 +43,6 @@ function draw() {
 <template lang='pug'>
 canvas.max-w-full(
   ref="canvas" 
-  height="512"
+  height="420"
   width="2048")
 </template>

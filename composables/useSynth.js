@@ -9,14 +9,16 @@ import noteKeys from './noteKeys.json'
 
 import { params } from '../elements/'
 
-import { pingPong } from '../elements/pingpong';
-import { srvb } from '../elements/srvb'
+import { pingPong } from '../elements/fx/pingpong';
+import { srvb } from '../elements/fx/srvb'
 import { useMidi } from './useMidi';
 
 import { createNoise } from '../elements/noise';
 import { createFat } from '../elements/fat';
 import { createString } from '../elements/string';
 import { createSampler } from '../elements/sampler';
+import { createRound } from '../elements/round';
+
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -70,6 +72,7 @@ export function useSynth() {
     const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => {
       const voiceParams = getVoiceParams(i)
       return el.add(
+        createRound(voiceParams, cv.round, cv.synth.bpm),
         createFat(voiceParams, cv.fat, cv.synth.bpm),
         createNoise(voiceParams, cv.noise, cv.synth.bpm),
         createString(voiceParams, cv.string, cv.synth.bpm),
@@ -78,7 +81,7 @@ export function useSynth() {
     }
     ))))
 
-    const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
+    const sampleRate = el.mul(0, el.meter({ name: 'sample_rate' }, el.sr()))
 
     const analyzed = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, signal)))
 
