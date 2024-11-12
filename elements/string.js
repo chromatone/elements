@@ -4,7 +4,7 @@ import { el } from "@elemaudio/core";
 export const params = {
   on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
-  noise: { value: 0.95, min: 0, max: 2, step: 0.01, fixed: 0 },
+  noise: { value: 0.95, min: 0, max: 2, step: 0.01, fixed: 2 },
   feedback: { value: 0.95, min: 0.8, max: .99, step: 0.01, },
   cutoff: { value: 200, min: 10, max: 20000, step: 1, },
   cutq: { value: 1.1, min: 0, max: 5, step: 0.1, },

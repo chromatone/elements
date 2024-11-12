@@ -42,7 +42,7 @@ export function pitchFreq(
 /**
  * Get a color for any given pitch and octave (velocity and alpha are also configurable)
  */
-export function pitchColor(pitch = 0, octave = 0, velocity = 1, alpha = 1) {
+export function pitchColor(pitch = 0, octave = 2, velocity = 1, alpha = 1) {
   if (octave === undefined) {
     octave = Math.floor(pitch / 12) + 4
   }

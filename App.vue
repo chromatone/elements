@@ -13,7 +13,7 @@ import { useMidi } from './composables/useMidi';
 
 import { version, year } from './package.json'
 
-// import MidiKeys from './components/MidiKeys.vue';
+import MidiKeys from './components/MidiKeys.vue';
 
 const { play, stop, stopAll, started, controls, groups, voices, params } = useSynth()
 
@@ -31,7 +31,6 @@ const { next, state, go } = useCycleList(layers)
 
 <template lang="pug">
 .flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.text-white.gap-2.flex-1
-  //- MidiKeys
   .relative.z-10.w-full
     .flex.flex-wrap.gap-2.items-center.absolute.top-0.w-full
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
@@ -113,6 +112,7 @@ const { next, state, go } = useCycleList(layers)
             v-model:r="controls[state].frelease"
             )
   .flex-1
+  MidiKeys
 
   .flex.flex-wrap.gap-2
     .p-2.rounded-md.bg-dark-300(v-for="(input, i) in inputs" :key="i") 

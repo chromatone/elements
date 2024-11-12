@@ -15,7 +15,7 @@ const props = defineProps({
   pressed: { type: Boolean, default: false }
 })
 
-const { activeNotes } = useMidi()
+const { activeNotes, midiNote } = useMidi()
 
 function logCurve(x, factor = 10) {
   // Ensure x is between 0 and 1
@@ -34,11 +34,25 @@ function startKey(note, event) {
   const adjustedVelocity = 0.3 + (logVelocity * 0.7);
   const scaleFactor = globalScale.isIn(notes[(note + 3) % 12]) ? 1 : 0.5;
   const finalVelocity = adjustedVelocity * scaleFactor;
-  console.log(Note.fromMidi(note), finalVelocity)
+  Object.assign(midiNote, {
+    number: note,
+    velocity: finalVelocity,
+    channel: 0,
+    timestamp: Date.now(),
+    port: 'keys'
+  })
+  activeNotes[note] = finalVelocity
 }
 
-function stopKey(note, event) {
-  console.log(Note.fromMidi(note))
+function stopKey(note) {
+  Object.assign(midiNote, {
+    number: note,
+    velocity: 0,
+    channel: 0,
+    timestamp: Date.now(),
+    port: 'keys'
+  })
+  activeNotes[note] = 0
 }
 
 const noteKey = ref()
@@ -54,7 +68,7 @@ g.note(
   rect(
     :width="width"
     :height="height"
-    :fill="pitchColor(note + 3, null, activeNotes[note] ? 1 : 0.1, globalScale.isIn(notes[(note + 3) % 12]) ? 1 : .4)"
+    :fill="pitchColor(note + 3, undefined, activeNotes[note] ? 1 : 0.1, globalScale.isIn(notes[(note + 3) % 12]) ? 1 : .4)"
     @pointerdown.prevent="startKey(note, $event)", 
     @pointerenter="pressed ? startKey(note, $event) : null"
     @pointerleave="stopKey(note, $event)", 
@@ -69,7 +83,7 @@ g.note(
       :y2="height"
       stroke-width="6"
       :opacity=".9"
-      :stroke="activeNotes[note] ? 'white' : pitchColor(note + 3, -1, 1, 1)"
+      :stroke="activeNotes[note] ? 'white' : pitchColor(note + 3, 0, 1, 1)"
       v-if="globalScale.tonic == (note + 3) % 12"
       )
     circle(

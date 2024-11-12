@@ -110,7 +110,7 @@ export function useSynth() {
 
   const keyOffset = useClamp(2, 0, 4)
 
-  const { midiNote } = useMidi()
+  const { midiNote, activeNotes } = useMidi()
 
   document.addEventListener('keydown', e => {
     if (e.code == 'Digit1') keyOffset.value--
@@ -118,26 +118,28 @@ export function useSynth() {
     if (e.repeat || !noteKeys[e.code]) return
     if (e.ctrlKey || e.altKey || e.metaKey) return
     if (e.code == 'Slash') e.preventDefault()
-    // play(noteKeys[e.code] + keyOffset.value * 12, 1)
+    const number = noteKeys[e.code] + keyOffset.value * 12
     Object.assign(midiNote, {
-      number: noteKeys[e.code] + keyOffset.value * 12,
+      number,
       velocity: 1,
       channel: 0,
       timestamp: Date.now(),
       port: 'keyboard'
     })
+    activeNotes[number] = 1
   })
 
   document.addEventListener('keyup', e => {
     if (!noteKeys[e.code]) return
-    // stop(noteKeys[e.code] + keyOffset.value * 12)
+    const number = noteKeys[e.code] + keyOffset.value * 12
     Object.assign(midiNote, {
-      number: noteKeys[e.code] + keyOffset.value * 12,
+      number,
       velocity: 0,
       channel: 0,
       timestamp: Date.now(),
       port: 'keyboard'
     })
+    activeNotes[number] = 0
   })
 
   return { controls, params, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }

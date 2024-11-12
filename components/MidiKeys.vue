@@ -15,9 +15,9 @@ import MidiKeysNote from './MidiKeysNote.vue';
 
 
 const props = defineProps({
-  width: { type: Number, default: 400 },
-  height: { type: Number, defual: 150 },
-  controlOffset: { type: Number, default: 200 },
+  width: { type: Number, default: 800 },
+  height: { type: Number, default: 150 },
+  controlOffset: { type: Number, default: 100 },
   slotOffset: { type: Number, default: 100 }
 })
 
@@ -96,8 +96,8 @@ const keys = computed(() => filterScale.value ? rawKeys.value.filter(key => {
 </script>
 
 <template lang='pug'>
-svg.w-full.cursor-pointer.select-none.touch-none.h-full.min-h-90.min-w-90(
-  :viewBox="`0 -${controlOffset + slotOffset} ${width} ${height + controlOffset}`"
+svg.w-full.cursor-pointer.select-none.touch-none.h-full(
+  :viewBox="`0 -${slotOffset} ${width} ${height + controlOffset}`"
   version="1.1",
   baseProfile="full",
   xmlns="http://www.w3.org/2000/svg",
@@ -117,7 +117,7 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full.min-h-90.min-w-90(
       rect(
         :height="controlOffset"
         :width="width / 5"
-        :fill="pitchColor(globalScale.tonic, 2, .8)"
+        :fill="pitchColor(globalScale.tonic, 3, .8)"
         )
       text.font-bold.text-5xl(
         :x="width / 10"
@@ -189,7 +189,7 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full.min-h-90.min-w-90(
       rect(
         :height="controlOffset"
         :width="width / 5"
-        :fill="pitchColor(begin + 3, null, activeNotes[begin] ? 1 : 0.1)"
+        :fill="pitchColor(begin + 3, undefined, activeNotes[begin] ? 1 : 0.1)"
         )
       text.font-bold.text-5xl.pointer-events-none(
         :x="10"
@@ -203,7 +203,7 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full.min-h-90.min-w-90(
       rect(
         :height="controlOffset"
         :width="width / 5"
-        :fill="pitchColor(end + 3, null, activeNotes[end] ? 1 : 0.1)"
+        :fill="pitchColor(end + 3, undefined, activeNotes[end] ? 1 : 0.1)"
         )
       text.font-bold.text-5xl.pointer-events-none(
         :x="width / 5 - 20"
