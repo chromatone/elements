@@ -46,11 +46,11 @@
 	},
 	"devDependencies": {
 		"@unocss/extractor-pug": "^0.64.0",
-		"@vitejs/plugin-vue": "^5.1.4",
+		"@vitejs/plugin-vue": "^5.1.5",
 		"@vue/language-plugin-pug": "^2.1.10",
 		"pug": "^3.0.3",
 		"unocss": "^0.64.0",
-		"vite": "^5.4.10",
+		"vite": "^5.4.11",
 		"vite-plugin-singlefile": "^2.0.3"
 	}
 }

@@ -34,7 +34,7 @@ importers:
         version: 6.3.0
       use-chromatone:
         specifier: 2.9.8-0
-        version: 2.9.8-0(@elemaudio/core@3.2.1)(@elemaudio/web-renderer@3.2.3)(focus-trap@7.6.0)(rollup@4.25.0)(tone@15.0.4)(vite@5.4.10(terser@5.36.0))(vitepress@1.5.0(@algolia/client-search@5.13.0)(drauu@0.4.1)(fuse.js@7.0.0)(postcss@8.4.47)(search-insights@2.17.2)(sortablejs@1.15.3)(terser@5.36.0))(vue@3.5.12)(webmidi@3.1.11)
+        version: 2.9.8-0(@elemaudio/core@3.2.1)(@elemaudio/web-renderer@3.2.3)(focus-trap@7.6.0)(rollup@4.25.0)(tone@15.0.4)(vite@5.4.11(terser@5.36.0))(vitepress@1.5.0(@algolia/client-search@5.13.0)(drauu@0.4.1)(fuse.js@7.0.0)(postcss@8.4.47)(search-insights@2.17.2)(sortablejs@1.15.3)(terser@5.36.0))(vue@3.5.12)(webmidi@3.1.11)
       vue:
         specifier: ^3.5.12
         version: 3.5.12
@@ -46,8 +46,8 @@ importers:
         specifier: ^0.64.0
         version: 0.64.0(pug@3.0.3)
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
-        version: 5.1.4(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+        specifier: ^5.1.5
+        version: 5.1.5(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
       '@vue/language-plugin-pug':
         specifier: ^2.1.10
         version: 2.1.10
@@ -56,13 +56,13 @@ importers:
         version: 3.0.3
       unocss:
         specifier: ^0.64.0
-        version: 0.64.0(postcss@8.4.47)(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+        version: 0.64.0(postcss@8.4.47)(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
       vite:
-        specifier: ^5.4.10
-        version: 5.4.10(terser@5.36.0)
+        specifier: ^5.4.11
+        version: 5.4.11(terser@5.36.0)
       vite-plugin-singlefile:
         specifier: ^2.0.3
-        version: 2.0.3(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))
+        version: 2.0.3(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))
 
 packages:
 
@@ -1044,8 +1044,8 @@ packages:
     peerDependencies:
       vite: ^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0-0
 
-  '@vitejs/plugin-vue@5.1.4':
-    resolution: {integrity: sha512-N2XSI2n3sQqp5w7Y/AN/L2XDjBIRGqXko+eDp42sydYSBeJuSm5a1sLf8zakmo8u7tA8NmBgoDLA1HeOESjp9A==}
+  '@vitejs/plugin-vue@5.1.5':
+    resolution: {integrity: sha512-dlnib73G05CDBAUR/YpuZcQQ47fpjihnnNouAAqN62z+oqSsWJ+kh52GRzIxpkgFG3q11eXK7Di7RMmoCwISZA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       vite: ^5.0.0
@@ -2902,8 +2902,8 @@ packages:
     peerDependencies:
       vite: ^2 || ^3 || ^4 || ^5
 
-  vite@5.4.10:
-    resolution: {integrity: sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==}
+  vite@5.4.11:
+    resolution: {integrity: sha512-c7jFQRklXua0mTzneGW9QVyxFjUgwcihC4bXEtujIo2ouWCe1Ajt/amn2PCxYnhYfd5k09JX3SB7OYWFKYqj8Q==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -3912,13 +3912,13 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@unocss/astro@0.64.0(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)':
+  '@unocss/astro@0.64.0(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)':
     dependencies:
       '@unocss/core': 0.64.0
       '@unocss/reset': 0.64.0
-      '@unocss/vite': 0.64.0(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+      '@unocss/vite': 0.64.0(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
     optionalDependencies:
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -4055,7 +4055,7 @@ snapshots:
     dependencies:
       '@unocss/core': 0.64.0
 
-  '@unocss/vite@0.64.0(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)':
+  '@unocss/vite@0.64.0(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@rollup/pluginutils': 5.1.3(rollup@4.25.0)
@@ -4065,15 +4065,15 @@ snapshots:
       chokidar: 3.6.0
       magic-string: 0.30.12
       tinyglobby: 0.2.10
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - vue
 
-  '@vitejs/plugin-vue@5.1.4(vite@5.4.10(terser@5.36.0))(vue@3.5.12)':
+  '@vitejs/plugin-vue@5.1.5(vite@5.4.11(terser@5.36.0))(vue@3.5.12)':
     dependencies:
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
       vue: 3.5.12
 
   '@volar/language-core@2.4.10':
@@ -6202,9 +6202,9 @@ snapshots:
     dependencies:
       universal-base64: 2.1.0
 
-  unocss@0.64.0(postcss@8.4.47)(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12):
+  unocss@0.64.0(postcss@8.4.47)(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12):
     dependencies:
-      '@unocss/astro': 0.64.0(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+      '@unocss/astro': 0.64.0(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
       '@unocss/cli': 0.64.0(rollup@4.25.0)
       '@unocss/core': 0.64.0
       '@unocss/postcss': 0.64.0(postcss@8.4.47)
@@ -6220,9 +6220,9 @@ snapshots:
       '@unocss/transformer-compile-class': 0.64.0
       '@unocss/transformer-directives': 0.64.0
       '@unocss/transformer-variant-group': 0.64.0
-      '@unocss/vite': 0.64.0(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+      '@unocss/vite': 0.64.0(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
     optionalDependencies:
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -6237,7 +6237,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-chromatone@2.9.8-0(@elemaudio/core@3.2.1)(@elemaudio/web-renderer@3.2.3)(focus-trap@7.6.0)(rollup@4.25.0)(tone@15.0.4)(vite@5.4.10(terser@5.36.0))(vitepress@1.5.0(@algolia/client-search@5.13.0)(drauu@0.4.1)(fuse.js@7.0.0)(postcss@8.4.47)(search-insights@2.17.2)(sortablejs@1.15.3)(terser@5.36.0))(vue@3.5.12)(webmidi@3.1.11):
+  use-chromatone@2.9.8-0(@elemaudio/core@3.2.1)(@elemaudio/web-renderer@3.2.3)(focus-trap@7.6.0)(rollup@4.25.0)(tone@15.0.4)(vite@5.4.11(terser@5.36.0))(vitepress@1.5.0(@algolia/client-search@5.13.0)(drauu@0.4.1)(fuse.js@7.0.0)(postcss@8.4.47)(search-insights@2.17.2)(sortablejs@1.15.3)(terser@5.36.0))(vue@3.5.12)(webmidi@3.1.11):
     dependencies:
       '@elemaudio/core': 3.2.1
       '@elemaudio/web-renderer': 3.2.3
@@ -6294,8 +6294,8 @@ snapshots:
       tone: 15.0.4
       universal-base64url: 1.1.0
       uqr: 0.1.2
-      vite-plugin-top-level-await: 1.4.4(rollup@4.25.0)(vite@5.4.10(terser@5.36.0))
-      vite-plugin-wasm: 3.3.0(vite@5.4.10(terser@5.36.0))
+      vite-plugin-top-level-await: 1.4.4(rollup@4.25.0)(vite@5.4.11(terser@5.36.0))
+      vite-plugin-wasm: 3.3.0(vite@5.4.11(terser@5.36.0))
       vitepress-plugin-rss: 0.3.0(vitepress@1.5.0(@algolia/client-search@5.13.0)(drauu@0.4.1)(fuse.js@7.0.0)(postcss@8.4.47)(search-insights@2.17.2)(sortablejs@1.15.3)(terser@5.36.0))
       vue: 3.5.12
       vue-glsl: 1.1.27
@@ -6345,27 +6345,27 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-plugin-singlefile@2.0.3(rollup@4.25.0)(vite@5.4.10(terser@5.36.0)):
+  vite-plugin-singlefile@2.0.3(rollup@4.25.0)(vite@5.4.11(terser@5.36.0)):
     dependencies:
       micromatch: 4.0.8
       rollup: 4.25.0
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
 
-  vite-plugin-top-level-await@1.4.4(rollup@4.25.0)(vite@5.4.10(terser@5.36.0)):
+  vite-plugin-top-level-await@1.4.4(rollup@4.25.0)(vite@5.4.11(terser@5.36.0)):
     dependencies:
       '@rollup/plugin-virtual': 3.0.2(rollup@4.25.0)
       '@swc/core': 1.9.1
       uuid: 10.0.0
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
 
-  vite-plugin-wasm@3.3.0(vite@5.4.10(terser@5.36.0)):
+  vite-plugin-wasm@3.3.0(vite@5.4.11(terser@5.36.0)):
     dependencies:
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
 
-  vite@5.4.10(terser@5.36.0):
+  vite@5.4.11(terser@5.36.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -6389,7 +6389,7 @@ snapshots:
       '@shikijs/transformers': 1.22.2
       '@shikijs/types': 1.22.2
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.1.4(vite@5.4.10(terser@5.36.0))(vue@3.5.12)
+      '@vitejs/plugin-vue': 5.1.5(vite@5.4.11(terser@5.36.0))(vue@3.5.12)
       '@vue/devtools-api': 7.6.3
       '@vue/shared': 3.5.12
       '@vueuse/core': 11.2.0(vue@3.5.12)
@@ -6398,7 +6398,7 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 7.1.0
       shiki: 1.22.2
-      vite: 5.4.10(terser@5.36.0)
+      vite: 5.4.11(terser@5.36.0)
       vue: 3.5.12
     optionalDependencies:
       postcss: 8.4.47
