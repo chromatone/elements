@@ -1,4 +1,4 @@
-const CACHE_NAME = 'elements-cache-v.0.3.1';
+const CACHE_NAME = 'elements-cache-v.0.3.2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
