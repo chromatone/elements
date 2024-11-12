@@ -1,3 +1,19 @@
+## v0.3.0 (2024-11-12)
+
+### New feature:
+
+- display version([`be92b06`](https://github.com/chromatone/elements/commit/be92b061e24234c3ce6a5ac8f42149d81baaf7c6)) (by davay)
+- App in the root and fresh cache([`ce5bb49`](https://github.com/chromatone/elements/commit/ce5bb49781c5fe29f5d49042fdb68f1951ad5f20)) (by davay)
+- grouped controls([`ea58008`](https://github.com/chromatone/elements/commit/ea58008c38bc6d6d6c3dfd21608e34e7ce520638)) (by davay)
+- grouped controls make elements more modular([`7300ea9`](https://github.com/chromatone/elements/commit/7300ea9243a6302fa56f1306a7e4af3ed10855d2)) (by davay)
+- enable scroll while developing([`4a57b35`](https://github.com/chromatone/elements/commit/4a57b35841b92ef56be013d366f76c279dbc98af)) (by davay)
+
+### Bugs fixed:
+
+- iOS ctx state bug fixed([`61f5994`](https://github.com/chromatone/elements/commit/61f599489fce9e62bcafcf1ec66d439310bc5bf8)) (by davay)
+- working around bug in iOS([`d7958fc`](https://github.com/chromatone/elements/commit/d7958fcd6ffc1f4ce812d41a2e3bfa3e29b007a7)) (by davay)
+
+
 ## v0.2.1 (2024-11-12)
 
 ### New feature:
