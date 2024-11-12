@@ -11,6 +11,7 @@ import { createSubtractive, params } from '../elements/'
 
 import { pingPong } from '../elements/pingpong';
 import { srvb } from '../elements/srvb'
+import { useMidi } from './useMidi';
 
 export const meters = reactive({})
 export const scopes = reactive({})
@@ -28,21 +29,25 @@ export function useSynth() {
   const { voices, cycleNote, initVoices, getVoiceParams, stopAll } = useVoices()
 
   async function start() {
-
     if (initiated.value) return
     initiated.value = true
+    started.value = true
 
     ctx = new (window.AudioContext || window.webkitAudioContext)()
-    if (ctx.state === 'suspended') await ctx.resume()
+    if (ctx.state === 'suspended') ctx.resume()
+
     core = new WebRenderer()
+
     const node = await core.initialize(ctx, {
       numberOfInputs: 1,
       numberOfOutputs: 1,
       outputChannelCount: [2],
     })
     node.connect(ctx.destination)
+
     initRefs(core)
     initVoices(core)
+
 
     core.on('meter', (e) => meters[e.source] = { max: e.max, min: e.min })
     core.on('scope', (e) => scopes[e.source] = Array.from(e?.data[0].values()))
@@ -70,7 +75,10 @@ export function useSynth() {
     }, ...ping)
 
     core.render(...stereo)
-    started.value = true
+
+
+
+
   }
 
   function play(midi = 57, vel = 1) {
@@ -83,18 +91,35 @@ export function useSynth() {
 
   const keyOffset = useClamp(2, 0, 4)
 
+  const { midiNote } = useMidi()
+
+
   document.addEventListener('keydown', e => {
     if (e.code == 'Digit1') keyOffset.value--
     if (e.code == 'Equal') keyOffset.value++
     if (e.repeat || !noteKeys[e.code]) return
     if (e.ctrlKey || e.altKey || e.metaKey) return
     if (e.code == 'Slash') e.preventDefault()
-    play(noteKeys[e.code] + keyOffset.value * 12, 1)
+    // play(noteKeys[e.code] + keyOffset.value * 12, 1)
+    Object.assign(midiNote, {
+      number: noteKeys[e.code] + keyOffset.value * 12,
+      velocity: 1,
+      channel: 0,
+      timestamp: Date.now(),
+      port: 'keyboard'
+    })
   })
 
   document.addEventListener('keyup', e => {
     if (!noteKeys[e.code]) return
-    stop(noteKeys[e.code] + keyOffset.value * 12)
+    // stop(noteKeys[e.code] + keyOffset.value * 12)
+    Object.assign(midiNote, {
+      number: noteKeys[e.code] + keyOffset.value * 12,
+      velocity: 0,
+      channel: 0,
+      timestamp: Date.now(),
+      port: 'keyboard'
+    })
   })
 
   return { controls, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }

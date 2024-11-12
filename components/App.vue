@@ -25,13 +25,13 @@ onKeyDown('Escape', () => { stopAll() })
 <template lang="pug">
 .flex.flex-col.items-center.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.p-1.w-full.h-full.bg-444.text-white.gap-4
   //- MidiKeys
-  .relative.-z-10
+  .relative.-z-10.h-50
     .flex.flex-wrap.gap-2.items-center.absolute.top-0.w-full
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
-    ShowFFT
+    ShowFFT.h-40
     ShowScope.absolute.top-0.pointer-events-none
-  .flex.items-center
-    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.z-1000( 
+  .flex.items-center.z-1000
+    button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
   .flex.flex-wrap.gap-2
@@ -48,12 +48,13 @@ onKeyDown('Escape', () => { stopAll() })
         v-for="(control, c) in group"
         :key="c"
         )
+        p {{ g }}
         ControlRotary.w-4em(
           v-model="controls[g][c]" 
           v-bind="control"
           :param="c")
       ControlAdsr(
-        v-if="['osc'].includes(g)"
+        v-if="controls[g].attack"
         title="Amplitude Envelope"
         v-model:a="controls[g].attack"
         v-model:d="controls[g].decay"
@@ -61,7 +62,7 @@ onKeyDown('Escape', () => { stopAll() })
         v-model:r="controls[g].release"
         )
       ControlAdsr(
-        v-if="['osc'].includes(g)"
+        v-if="controls[g].fattack"
           title="Filter Envelope"
           v-model:a="controls[g].fattack"
           v-model:d="controls[g].fdecay"
@@ -95,6 +96,7 @@ a {
 body {
   @apply flex items-stretch justify-stretch;
   background-color: #444;
+  touch-action: manipulation;
   width: 100%;
   min-width: 320px;
   min-height: 100vh;

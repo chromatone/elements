@@ -1,4 +1,4 @@
-import { midiFrequency } from "./midi";
+import { midiFrequency } from "./index";
 import { el } from "@elemaudio/core";
 
 export const params = {
