@@ -20,7 +20,7 @@ export const params = {
   frelease: { value: 1, min: 0.01, max: 10, step: 0.1, hidden: true, },
 };
 
-export function createSubtractive({ gate, midi, vel }, cv, bpm) {
+export function createFat({ gate, midi, vel }, cv, bpm) {
 
   const freq = midiFrequency(el.add(midi,
     el.mul(cv.vibdep,

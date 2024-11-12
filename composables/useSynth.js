@@ -14,7 +14,7 @@ import { srvb } from '../elements/srvb'
 import { useMidi } from './useMidi';
 
 import { createNoise } from '../elements/noise';
-import { createSubtractive } from '../elements/subtractive';
+import { createFat } from '../elements/fat';
 import { createString } from '../elements/string';
 import { createSampler } from '../elements/sampler';
 
@@ -67,12 +67,15 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => el.add(
-      createSubtractive(getVoiceParams(i), cv.sub, cv.synth.bpm),
-      createNoise(getVoiceParams(i), cv.noise, cv.synth.bpm),
-      createString(getVoiceParams(i), cv.string, cv.synth.bpm),
-      createSampler(getVoiceParams(i), cv.sampler, cv.synth.bpm)
-    )
+    const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => {
+      const voiceParams = getVoiceParams(i)
+      return el.add(
+        createFat(voiceParams, cv.fat, cv.synth.bpm),
+        createNoise(voiceParams, cv.noise, cv.synth.bpm),
+        createString(voiceParams, cv.string, cv.synth.bpm),
+        createSampler(voiceParams, cv.sampler, cv.synth.bpm)
+      )
+    }
     ))))
 
     const sampleRate = el.mul(0, el.meter({ name: 'sample-rate' }, el.sr()))
@@ -134,5 +137,5 @@ export function useSynth() {
     })
   })
 
-  return { controls, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
+  return { controls, params, keyOffset, groups, play, stop, stopAll, initiated, started, meters, scopes, FFTs, voices }
 }

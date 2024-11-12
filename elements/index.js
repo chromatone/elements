@@ -1,4 +1,4 @@
-import { params as sub } from './subtractive'
+import { params as fat } from './fat'
 import { params as srvb } from './srvb'
 import { params as pingpong } from './pingpong'
 import { params as noise } from './noise'
@@ -12,7 +12,7 @@ export const params = {
   },
   srvb,
   pingpong,
-  sub,
+  fat,
   noise,
   string,
   sampler

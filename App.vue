@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { onKeyDown } from '@vueuse/core';
+import { onKeyDown, useCycleList } from '@vueuse/core';
 
 import ControlRotary from './components/ControlRotary.vue'
 import ControlAdsr from './components/ControlAdsr.vue';
@@ -15,13 +15,17 @@ import { version } from './package.json'
 
 // import MidiKeys from './components/MidiKeys.vue';
 
-const { play, stop, stopAll, started, controls, groups, voices } = useSynth()
+const { play, stop, stopAll, started, controls, groups, voices, params } = useSynth()
 
 const { inputs, midiLog, midiNote } = useMidi()
 
 watch(midiNote, note => play(note.number, note.velocity))
 
 onKeyDown('Escape', () => { stopAll() })
+
+const layers = ['fat', 'string', 'noise', 'sampler']
+
+const { next, state, go } = useCycleList(layers)
 
 </script>
 
@@ -33,45 +37,82 @@ onKeyDown('Escape', () => { stopAll() })
       .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT.h-40
     ShowScope.absolute.top-0.pointer-events-none
-  .flex.items-center.z-1000
+
+  .flex.items-center.gap-2.flex-wrap
     button.text-xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
       @pointerdown="play(midiNote.number)" 
-      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
-  .flex.flex-wrap.gap-2
-    .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
+      @pointerup="stop(midiNote.number)" ) {{ started ? 'PLAY' : 'START' }}
+    .flex.flex-wrap.items-center.border-1.rounded-xl
+      ControlRotary(
+        v-model="controls.synth.vol" 
+        v-bind="params.synth.vol"
+        param="VOL")
+      ControlRotary(
+        v-model="controls.synth.bpm" 
+        v-bind="params.synth.bpm"
+        param="BPM")
 
-      v-for="(group, g ) in groups" :key="group")
-      .text-10px.absolute.-top-4.left-2.uppercase {{ g }}
-      button.ml-1.p-2.border-light-400.rounded-xl.border-1(
-        v-if="controls[g].hasOwnProperty(`on`)"
-        :class="{ 'bg-dark-400': controls[g].on }"
-        @click="controls[g].on == 0 ? controls[g].on = 1 : controls[g].on = 0")
-        .i-la-check
+    .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
+      v-for="fx in ['pingpong', 'srvb']" :key="fx"
+      style="flex: 1 1 300px"
+      )
+      button.ml-1.p-2.border-light-400.rounded-xl.border-1.uppercase.text-sm(
+        v-if="controls[fx].hasOwnProperty(`on`)"
+        :class="{ 'bg-dark-400': controls[fx].on }"
+        @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0") {{ fx }}
       template(
-        v-for="(control, c) in group"
+        v-for="(control, c) in groups[fx]"
         :key="c"
         )
         ControlRotary.w-4em.flex-1(
-          v-model="controls[g][c]" 
-          v-bind="control"
+          v-model="controls[fx][c]" 
+          v-bind="params[fx][c]"
           :param="c")
+
+
+  .flex.flex-wrap.gap-2
+    button.uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20(
+      v-for="layer in layers" :key="layer" 
+      :class="{ 'bg-dark-800': state == layer, 'border-white border-op-90': controls[layer].on }"
+      @click="state = layer"
+      ) {{ layer }}
+
+  .flex.flex-wrap.gap-2
+    .relative.flex.flex-wrap.items-center.border-1.rounded-xl
+      button.ml-1.p-2.border-light-400.rounded-xl.border-1.uppercase.text-sm(
+        v-if="controls[state].hasOwnProperty(`on`)"
+        :class="{ 'bg-dark-400': controls[state].on }"
+        @click="controls[state].on == 0 ? controls[state].on = 1 : controls[state].on = 0") {{ state }}
+
+      template(
+        v-for="(control, c) in groups[state]"
+        :key="c"
+        )
+        ControlRotary.w-4em.flex-1(
+          v-model="controls[state][c]" 
+          v-bind="params[state][c]"
+          :param="c")
+
       .flex.flex-wrap.flex-1
         ControlAdsr(
-          v-if="controls[g].attack"
+          v-if="controls[state].attack"
           title="Amplitude Envelope"
-          v-model:a="controls[g].attack"
-          v-model:d="controls[g].decay"
-          v-model:s="controls[g].sustain"
-          v-model:r="controls[g].release"
+          v-model:a="controls[state].attack"
+          v-model:d="controls[state].decay"
+          v-model:s="controls[state].sustain"
+          v-model:r="controls[state].release"
           )
         ControlAdsr(
-          v-if="controls[g].fattack"
+          v-if="controls[state].fattack"
           title="Filter Envelope"
-          v-model:a="controls[g].fattack"
-          v-model:d="controls[g].fdecay"
-          v-model:s="controls[g].fsustain"
-          v-model:r="controls[g].frelease"
+          v-model:a="controls[state].fattack"
+          v-model:d="controls[state].fdecay"
+          v-model:s="controls[state].fsustain"
+          v-model:r="controls[state].frelease"
           )
+
+
+
 
   .flex.flex-wrap.p-4 
     .p-2.rounded-xl.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
