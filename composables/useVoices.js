@@ -15,14 +15,15 @@ export function useVoices(VOICE_COUNT = 8) {
   const initialized = ref(false)
 
   function initVoices(core) {
-    voices.forEach(voice => {
-      parameters.forEach(param => {
-        const [ref, setter] = core.createRef('const', { value: voice[param].value }, [])
-        voice[param].ref = el.smooth(el.tau2pole(0.001), ref)
-        voice[param].setter = setter
-      });
-    });
 
+    for (let v in voices) {
+      for (let p in parameters) {
+        const param = parameters[p]
+        const [ref, setter] = core.createRef('const', { value: voices[v][param].value }, [])
+        voices[v][param].ref = el.smooth(el.tau2pole(0.001), ref)
+        voices[v][param].setter = setter
+      }
+    }
     initialized.value = true
   }
 
@@ -30,7 +31,6 @@ export function useVoices(VOICE_COUNT = 8) {
 
   function cycleNote(num, velocity) {
     if (velocity > 0) {
-
       const index = findNextAvailableVoice(nextVoiceIndex);
       updateVoice(index, { gate: 1, midi: num, vel: velocity })
     } else {
@@ -39,14 +39,15 @@ export function useVoices(VOICE_COUNT = 8) {
   }
 
   function updateVoice(index, params) {
-    if (!initialized.value) return
 
+    if (!initialized.value) return
     const voice = voices[index];
     Object.entries(params).forEach(([param, value]) => {
       if (param in voice && value !== undefined) {
         voice[param].value = value
         voice[param].setter?.({ value })
       }
+
     });
   }
 

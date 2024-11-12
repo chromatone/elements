@@ -36,7 +36,7 @@ onKeyDown('Escape', () => { stopAll() })
   .flex.items-center.z-1000
     button.text-2xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
       @pointerdown="play(midiNote.number)" 
-      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}
+      @pointerup="stop(midiNote.number)" ) {{ started ? 'Press to play sound' : 'Start' }}!!
   .flex.flex-wrap.gap-2
     .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
       style="flex: 1 1 100px"
@@ -89,7 +89,7 @@ onKeyDown('Escape', () => { stopAll() })
 
 <style lang="postcss">
 #app {
-  @apply w-full h-full p-1;
+  @apply w-full h-full p-2;
 }
 
 a {
@@ -99,7 +99,6 @@ a {
 body {
   @apply flex items-stretch justify-stretch;
   background-color: #444;
-
   width: 100%;
   min-width: 320px;
   min-height: 100vh;

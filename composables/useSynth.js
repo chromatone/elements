@@ -34,7 +34,7 @@ export function useSynth() {
     started.value = true
 
     ctx = new (window.AudioContext || window.webkitAudioContext)()
-    if (ctx.state === 'suspended') ctx.resume()
+
 
     core = new WebRenderer()
 
@@ -76,23 +76,19 @@ export function useSynth() {
 
     core.render(...stereo)
 
-
-
-
   }
 
   function play(midi = 57, vel = 1) {
     if (!started.value) { start() }
+    if (ctx.state === 'suspended') ctx.resume()
     cycleNote(midi, vel)
   }
 
   function stop(midi = 57) { cycleNote(midi, 0) }
 
-
   const keyOffset = useClamp(2, 0, 4)
 
   const { midiNote } = useMidi()
-
 
   document.addEventListener('keydown', e => {
     if (e.code == 'Digit1') keyOffset.value--

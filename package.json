@@ -27,7 +27,7 @@
 	},
 	"packageManager": "pnpm@9.12.3",
 	"scripts": {
-		"dev": "vite --host",
+		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview"
 	},
