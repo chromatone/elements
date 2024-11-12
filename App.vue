@@ -32,8 +32,6 @@ const { next, state, go } = useCycleList(layers)
 <template lang="pug">
 .flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.text-white.gap-2.flex-1
   .relative.z-10.w-full
-    .flex.flex-wrap.gap-2.items-center.absolute.top-0.w-full
-      .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
     ShowFFT
     ShowScope.absolute.top-0.pointer-events-none
   .flex.flex-col.p-2
@@ -41,6 +39,9 @@ const { next, state, go } = useCycleList(layers)
       button.text-xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
         @pointerdown="play(midiNote.number)" 
         @pointerup="stop(midiNote.number)" ) {{ started ? 'PLAY' : 'START' }}
+
+      .grid.gap-2.grid-cols-3
+        .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
       .flex.flex-wrap.items-center.border-1.rounded-xl
         ControlRotary(
           v-model="controls.synth.vol" 

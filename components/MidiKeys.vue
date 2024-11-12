@@ -31,15 +31,6 @@ const area = ref()
 
 const pressed = ref(false)
 
-useGesture({
-  onPointerdown(ev) { pressed.value = true },
-  onPointerleave(ev) { pressed.value = false },
-  onPointercancel(ev) { pressed.value = false },
-  onPointerup(ev) { pressed.value = false }
-}, {
-  domTarget: svg,
-})
-
 const tonicControl = ref()
 const tonicCents = ref(globalScale.tonic * 100)
 
@@ -103,6 +94,10 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full(
   xmlns="http://www.w3.org/2000/svg",
   style="touch-action:none"
   ref="svg"
+  @pointerdown="pressed = true"
+  @pointercancel="pressed = false"
+  @pointerup="pressed = false"
+  @pointerleave="pressed = false"
   )
   g.slot(
     :transform="`translate(0,${-slotOffset - controlOffset})`"

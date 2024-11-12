@@ -3,7 +3,7 @@ import { el } from "@elemaudio/core";
 
 const parameters = ['gate', 'midi', 'vel']
 
-export function useVoices(VOICE_COUNT = 8) {
+export function useVoices(VOICE_COUNT = 9) {
 
   const voices = reactive(Array(VOICE_COUNT)
     .fill(null).map(() =>
