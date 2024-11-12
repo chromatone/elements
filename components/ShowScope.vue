@@ -4,9 +4,9 @@ import { scopes } from '../composables/useSynth';
 
 const props = defineProps({
   name: { default: 'main', type: String },
-  color: { default: 'currentColor', type: String },
+  color: { default: 'white', type: String },
   triggerLevel: { default: 0, type: Number },
-});
+})
 
 
 const canvas = ref(null);
@@ -14,8 +14,8 @@ let animationFrameId = null;
 
 onMounted(() => {
   if (canvas.value) {
-    canvas.value.width = canvas.value.clientWidth;
-    canvas.value.height = canvas.value.clientHeight;
+    canvas.value.width = canvas.value.clientWidth
+    canvas.value.height = canvas.value.clientHeight
   }
   startAnimation();
 });

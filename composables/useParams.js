@@ -42,7 +42,7 @@ export function useParams(params, title = "ref") {
     refsInitiated = true
   }
 
-  watch(() => ({ ...controls }), () => {
+  watch(controls, () => {
     if (!refsInitiated) return
     for (let g in controls) {
       const group = params[g]
