@@ -1,3 +1,12 @@
+## v0.4.0 (2024-11-13)
+
+### New feature:
+
+- lib build ready([`fa39c2a`](https://github.com/chromatone/elements/commit/fa39c2a37c34af853604815ddb98a4c3bea88768)) (by davay)
+- moved spectrogram to the bottom([`b9590f0`](https://github.com/chromatone/elements/commit/b9590f05c2d1b83be981e47ab38d6a04a03a4be6)) (by davay)
+- octave offset for each layer([`60a8f9e`](https://github.com/chromatone/elements/commit/60a8f9ebe59a469bfb958f3959ecb15080cd9cfc)) (by davay)
+- vertical drag for key controls([`a80fde0`](https://github.com/chromatone/elements/commit/a80fde0b706d143a48ac31c5d9f5846a68cf1bf3)) (by davay)
+
 ## v0.3.4 (2024-11-13)
 
 ### New feature:
