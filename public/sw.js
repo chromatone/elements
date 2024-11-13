@@ -1,9 +1,8 @@
-const CACHE_NAME = 'elements-cache-v.0.4.0';
+const CACHE_NAME = 'elements-cache-v.0.4.1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/logo.svg',
-  '/A4.mp3'
 ];
 
 // Install Service Worker

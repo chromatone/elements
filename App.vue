@@ -23,7 +23,7 @@ watch(midiNote, note => play(note.number, note.velocity))
 
 onKeyDown('Escape', () => { stopAll() })
 
-const layers = ['round', 'fat', 'string', 'noise', 'sampler']
+const layers = ['round', 'fat', 'string', 'noise']
 
 const fxs = ['pingpong', 'srvb']
 
@@ -55,7 +55,7 @@ const { next, state, go } = useCycleList(layers)
         h1.text-xl Chromatone
       h2.text-4xl Elements
       h2.text-2xl Multilayered polyphonic synthesizer app 
-      h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 5 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
+      h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 4 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
 
 
 

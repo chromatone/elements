@@ -16,7 +16,7 @@ import { useMidi } from './useMidi';
 import { createNoise } from '../elements/noise';
 import { createFat } from '../elements/fat';
 import { createString } from '../elements/string';
-import { createSampler } from '../elements/sampler';
+// import { createSampler } from '../elements/sampler';
 import { createRound } from '../elements/round';
 
 
@@ -58,11 +58,11 @@ export function useSynth() {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    let res = await fetch('/A4.mp3')
-    let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer())
-    core.updateVirtualFileSystem({
-      'piano': sampleBuffer.getChannelData(0),
-    })
+    // let res = await fetch('/A4.mp3')
+    // let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer())
+    // core.updateVirtualFileSystem({
+    //   'piano': sampleBuffer.getChannelData(0),
+    // })
 
     const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => {
       const voiceParams = getVoiceParams(i)
@@ -71,7 +71,7 @@ export function useSynth() {
         createFat(voiceParams, cv.fat, cv.synth.bpm),
         createNoise(voiceParams, cv.noise, cv.synth.bpm),
         createString(voiceParams, cv.string, cv.synth.bpm),
-        createSampler(voiceParams, cv.sampler, cv.synth.bpm)
+        // createSampler(voiceParams, cv.sampler, cv.synth.bpm)
       )
     }
     ))))

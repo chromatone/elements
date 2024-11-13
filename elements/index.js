@@ -3,7 +3,6 @@ import { params as srvb } from './fx/srvb'
 import { params as pingpong } from './fx/pingpong'
 import { params as noise } from './noise'
 import { params as string } from './string'
-import { params as sampler } from './sampler'
 import { params as round } from './round'
 
 export const params = {
@@ -15,7 +14,6 @@ export const params = {
   fat,
   noise,
   string,
-  sampler,
   srvb,
   pingpong,
 }
