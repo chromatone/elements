@@ -1,3 +1,20 @@
+## v0.3.4 (2024-11-13)
+
+### New feature:
+
+- pitch color with changing brightness depending on note octave([`ca57aa0`](https://github.com/chromatone/elements/commit/ca57aa0ed92101c226df230c8293d7cf050e4d8c)) (by davay)
+- toggle FX, settled layout([`3108a4a`](https://github.com/chromatone/elements/commit/3108a4a56bc98a840c2cf5e2b9496754511f5755)) (by davay)
+- elements package started([`654c575`](https://github.com/chromatone/elements/commit/654c5756f3edb1aaf92253c0373a381eb9c86f1d)) (by davay)
+- cached sample([`55e2767`](https://github.com/chromatone/elements/commit/55e276709579cc6c19697a18d2a9bb967d4830d6)) (by davay)
+
+## v0.3.3 (2024-11-13)
+
+### New feature:
+
+- better UI([`34b1570`](https://github.com/chromatone/elements/commit/34b1570605852596b7585bf687de38d2f27354d0)) (by davay)
+- limit to 6 voices([`24d231e`](https://github.com/chromatone/elements/commit/24d231ed324e14424b148767620da80beeeb463c)) (by davay)
+- bump deps([`c90727d`](https://github.com/chromatone/elements/commit/c90727dc7c3c9d4d128142f9d18244bafba72127)) (by davay)
+
 ## v0.3.2 (2024-11-12)
 
 ### New feature:
