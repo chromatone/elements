@@ -4,6 +4,7 @@ import { el } from "@elemaudio/core";
 export const params = {
   on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
+  octave: { value: 0, min: -2, max: 2, step: 1 },
   shape: { value: 0.2, min: 0, max: 1, step: 0.01, },
   vibdep: { value: 0.1, min: 0, max: .5, step: 0.01, fixed: 2 },
   vibrate: { value: 2, min: 1, max: 8, step: 0.01, },
@@ -22,12 +23,12 @@ export const params = {
 
 export function createRound({ gate, midi, vel }, cv, bpm) {
 
-  const freq = midiFrequency(el.add(midi,
+  const freq = el.mul(el.pow(2, cv.octave), midiFrequency(el.add(midi,
     el.mul(cv.vibdep,
       el.cycle(
         el.mul(
           cv.vibrate,
-          el.div(bpm, 60))))))
+          el.div(bpm, 60)))))))
 
   const squareOsc = el.cycle(freq);
   const sawOsc = el.triangle(freq);

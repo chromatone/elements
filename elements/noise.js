@@ -4,6 +4,7 @@ import { el } from "@elemaudio/core";
 export const params = {
   on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
+  octave: { value: 0, min: -2, max: 2, step: 1 },
   color: { value: 0, min: 0, max: 1, step: 0.001, },
   bandq: { value: 5, min: 0, max: 10, step: 0.1, },
   cutoff: { value: 200, min: 10, max: 20000, step: 1, },
@@ -20,6 +21,8 @@ export const params = {
 };
 
 export function createNoise({ gate, midi, vel }, cv, bpm) {
+
+  let freq = el.mul(el.pow(2, cv.octave), midiFrequency(midi))
 
   let rate = el.div(15, bpm)
 
@@ -47,7 +50,7 @@ export function createNoise({ gate, midi, vel }, cv, bpm) {
     el.mul(pinkGain, el.pinknoise())
   );
 
-  const filter = el.bandpass(midiFrequency(midi), cv.bandq, noiseSrc);
+  const filter = el.bandpass(freq, cv.bandq, noiseSrc);
 
   const filterCutoff = el.max(20, el.min(20000, el.add(
     cv.cutoff,

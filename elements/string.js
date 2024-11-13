@@ -4,6 +4,7 @@ import { el } from "@elemaudio/core";
 export const params = {
   on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
+  octave: { value: 0, min: -2, max: 2, step: 1 },
   noise: { value: 0.95, min: 0, max: 2, step: 0.01, fixed: 2 },
   feedback: { value: 0.95, min: 0.8, max: .99, step: 0.01, },
   cutoff: { value: 200, min: 10, max: 20000, step: 1, },
@@ -23,7 +24,7 @@ export const params = {
 
 export function createString({ gate, midi, vel }, cv, bpm) {
 
-  const freq = midiFrequency(midi)
+  const freq = el.mul(el.pow(2, cv.octave), midiFrequency(midi))
 
   let rate = el.div(15, bpm)
 

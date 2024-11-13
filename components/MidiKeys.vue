@@ -41,11 +41,11 @@ watch(tonicCents, cents => {
 useGesture({
   onDrag(ev) {
     ev.event.preventDefault()
-    tonicCents.value += ev.delta[0]
+    tonicCents.value += ev.delta[0] - ev.delta[1]
   },
   onWheel(ev) {
     ev.event.preventDefault()
-    tonicCents.value -= ev.velocities[0]
+    tonicCents.value -= ev.velocities[0] + ev.velocities[1] * 4
   }
 }, {
   domTarget: tonicControl,
@@ -58,11 +58,11 @@ const scaleCurrent = useClamp(useStorage('midikeys-scale', 1), 1, ScaleType.all(
 useGesture({
   onDrag(ev) {
     ev.event.preventDefault()
-    scaleCurrent.value += ev.delta[0] / 5
+    scaleCurrent.value += ev.delta[0] / 5 - ev.delta[1] / 5
   },
   onWheel(ev) {
     ev.event.preventDefault()
-    scaleCurrent.value -= ev.velocities[0] / 5
+    scaleCurrent.value -= ev.velocities[0] / 5 - ev.velocities[1] / 5
   }
 }, {
   domTarget: scaleControl,
@@ -103,7 +103,7 @@ svg.cursor-pointer.select-none.touch-none.shadow-xl.mx-auto(
     :transform="`translate(0,${-slotOffset - controlOffset})`"
     )
     slot
-  g.offset(  
+  g.offset.cursor-grab.active-cursor-grabbing(  
     :transform="`translate(0,${-controlOffset})`"
     )
     g.tonic(
