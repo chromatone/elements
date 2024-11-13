@@ -11,13 +11,13 @@ export const params = {
     "bpm": { "value": 120, "min": 10, "max": 500, "step": 1 },
     "vol": { "value": 0.5, "min": 0, "max": 1, "step": 0.01 },
   },
-  srvb,
-  pingpong,
   round,
   fat,
   noise,
   string,
-  sampler
+  sampler,
+  srvb,
+  pingpong,
 }
 
 

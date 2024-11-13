@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { onKeyDown, useCycleList } from '@vueuse/core';
+import { onKeyDown, useCycleList, useWindowSize } from '@vueuse/core';
 
 import ControlRotary from './components/ControlRotary.vue'
 import ControlAdsr from './components/ControlAdsr.vue';
@@ -27,14 +27,34 @@ const layers = ['round', 'fat', 'string', 'noise', 'sampler']
 
 const { next, state, go } = useCycleList(layers)
 
+const { width } = useWindowSize()
+
 </script>
 
 <template lang="pug">
-.flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.text-white.gap-2.flex-1
-  .relative.z-10.w-full
-    ShowFFT
-    ShowScope.absolute.top-0.pointer-events-none
-  .flex.flex-col.p-2
+.flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.text-white.flex-1
+
+  .bg-dark-800.bg-op-40.p-2.text-light-800.flex.gap-2.items-center.flex-wrap.w-full
+    a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
+      img(src="/logo.svg" width="20" height="20")
+      h1.p-0 Chromatone
+    h2.p-0 Elements
+    .flex-1
+
+    a.flex.gap-1.items-center.no-underline(href="https://github.com/chromatone/elements/" target="_blank")
+      .i-la-github
+      span v.{{ version }}
+    //- span MIT {{ year }}
+  .sticky.top-0.rounded-lg.w-full.z-100
+    .relative.z-10.w-full.bg-dark-800.bg-op-80.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
+      article.absolute.top-0.p-4.flex.flex-col.h-full.gap-2(v-if="!started")
+        h2.text-2xl Multilayered polyphonic digital synthesizer web-app 
+        h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 5 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.
+      ShowFFT.max-h-30vh
+      ShowScope.absolute.top-0.pointer-events-none
+
+
+  .flex.flex-col.p-2.pb-20.pt-4.gap-2
     .flex.items-center.gap-2.flex-wrap.w-full
       button.text-xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
         @pointerdown="play(midiNote.number)" 
@@ -51,24 +71,6 @@ const { next, state, go } = useCycleList(layers)
           v-model="controls.synth.bpm" 
           v-bind="params.synth.bpm"
           param="BPM")
-
-      .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
-        v-for="fx in ['pingpong', 'srvb']" :key="fx"
-        style="flex: 0 1 350px"
-        )
-        button.ml-1.p-2.border-light-400.rounded-xl.border-1.uppercase.text-sm(
-          v-if="controls[fx].hasOwnProperty(`on`)"
-          :class="{ 'bg-dark-400': controls[fx].on }"
-          @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0") {{ fx }}
-        template(
-          v-for="(control, c) in groups[fx]"
-          :key="c"
-          )
-          ControlRotary.w-4em.flex-1(
-            v-model="controls[fx][c]" 
-            v-bind="params[fx][c]"
-            :param="c")
-
 
     .flex.flex-wrap.gap-2
       .uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2(
@@ -112,15 +114,35 @@ const { next, state, go } = useCycleList(layers)
             v-model:s="controls[state].fsustain"
             v-model:r="controls[state].frelease"
             )
-  .flex-1
-  MidiKeys
 
-  .flex.flex-wrap.gap-2
+      .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
+        v-for="fx in ['pingpong', 'srvb']" :key="fx"
+        style="flex: 0 1 350px"
+        )
+        button.ml-1.p-2.border-light-400.rounded-xl.border-1.uppercase.text-sm(
+          v-if="controls[fx].hasOwnProperty(`on`)"
+          :class="{ 'bg-dark-400': controls[fx].on }"
+          @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0") {{ fx }}
+        template(
+          v-for="(control, c) in groups[fx]"
+          :key="c"
+          )
+          ControlRotary.w-4em.flex-1(
+            v-model="controls[fx][c]" 
+            v-bind="params[fx][c]"
+            :param="c")
+
+  .flex-1
+
+  MidiKeys.max-h-35vh.sticky.bottom-4
+
+
+  .flex.flex-wrap.gap-2(v-if="inputs.length")
     .p-2.rounded-md.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
       .text-xs {{ input?.manufacturer }}
       .text-lg {{ input.name }}
 
-  .bg-dark-300.p-2.flex.w-full.flex-col.gap-1.max-h-16.overflow-y-scroll
+  .bg-dark-300.p-2.flex.w-full.flex-col.gap-1.max-h-16.overflow-y-scroll(v-if="midiLog.length")
     .p-1.text-xs.flex.flex.items-center.gap-2(v-for="record in midiLog" :key="record") 
       .uppercase {{ record.message.type }}
       .i-la-cog(v-if="record.message.isSystemMessage")
@@ -128,16 +150,7 @@ const { next, state, go } = useCycleList(layers)
       .op-80 {{ record.message.dataBytes[0] }}
       .op-80 {{ record.message.dataBytes[1] }}
 
-.rounded-lg.bg-dark-800.bg-op-40.p-2.text-light-800.flex.gap-2.items-center.flex-wrap
-  a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
-    img(src="/logo.svg" width="20" height="20")
-    .p-0 Chromatone
-  .p-0 Elements
-  .flex-1
-  span MIT {{ year }}
-  a.flex.gap-1.items-center(href="https://github.com/chromatone/elements/" target="_blank")
-    .i-la-github
-    span v.{{ version }}
+
 
 </template>
 
@@ -154,6 +167,7 @@ html {
   @apply min-h-100svh;
 }
 
+html,
 body {
   @apply flex items-stretch justify-stretch min-h-100svh;
   background-color: #444;

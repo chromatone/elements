@@ -41,8 +41,9 @@ function draw() {
 </script>
 
 <template lang='pug'>
-canvas.max-w-full(
+canvas.max-w-full.w-full(
   ref="canvas" 
-  height="420"
-  width="2048")
+  height="320"
+  width="800"
+  )
 </template>

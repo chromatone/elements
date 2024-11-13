@@ -16,7 +16,7 @@ import MidiKeysNote from './MidiKeysNote.vue';
 
 const props = defineProps({
   width: { type: Number, default: 800 },
-  height: { type: Number, default: 150 },
+  height: { type: Number, default: 240 },
   controlOffset: { type: Number, default: 100 },
   slotOffset: { type: Number, default: 100 }
 })
@@ -87,7 +87,7 @@ const keys = computed(() => filterScale.value ? rawKeys.value.filter(key => {
 </script>
 
 <template lang='pug'>
-svg.w-full.cursor-pointer.select-none.touch-none.h-full(
+svg.w-full.cursor-pointer.select-none.touch-none(
   :viewBox="`0 -${slotOffset} ${width} ${height + controlOffset}`"
   version="1.1",
   baseProfile="full",
@@ -144,7 +144,7 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full(
         fill="#aaa"
         )
       text.text-4xl(
-        :x="30"
+        :x="50"
         :y="controlOffset * .75"
         ) {{ scaleChroma.name }}
       line(
@@ -165,12 +165,12 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full(
         )
 
       g.show(
-        :transform="`translate(${width * 2 / 5 - 50},10)`"
+        :transform="`translate(30,15)`"
         )
         circle(
           @click="filterScale = !filterScale"
           :cy="controlOffset * .5"
-          r="20"
+          r="10"
           :fill="filterScale ? 'black' : 'transparent'"
           :stroke="'black'"
           :stroke-width="4"
@@ -244,6 +244,7 @@ svg.w-full.cursor-pointer.select-none.touch-none.h-full(
   g.keys(
     ref="area"
     )
+    rect(:width :height fill="#333")
     MidiKeysNote(
       v-for="(key, k) in keys" :key="key"
       :note="key"
