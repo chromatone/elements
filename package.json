@@ -1,7 +1,7 @@
 {
 	"name": "chromatone-elements",
 	"description": "Multilayered polyphonic synthesizer progressive web-app",
-	"version": "0.3.4",
+	"version": "0.4.0",
 	"year": 2024,
 	"homepage": "https://elements.chromatone.center",
 	"repository": {
