@@ -70,7 +70,7 @@ const { next, state, go } = useCycleList(layers)
         @pointerup="stop(midiNote.number)" )
 
       .gap-2.columns-2
-        .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
+        .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, undefined, undefined, voice.gate.value ? 1 : 0.1) }")
       .flex.flex-wrap.items-center.border-1.rounded-xl
         ControlRotary(
           v-model="controls.synth.vol" 

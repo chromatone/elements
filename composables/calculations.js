@@ -42,18 +42,18 @@ export function pitchFreq(
 /**
  * Get a color for any given pitch and octave (velocity and alpha are also configurable)
  */
-export function pitchColor(pitch = 0, octave = 2, velocity = 1, alpha = 1) {
+export function pitchColor(pitch = 0, octave, velocity = 1, alpha = 1) {
   if (octave === undefined) {
-    octave = Math.floor(pitch / 12) + 4
+    octave = Math.floor(pitch / 12)
   }
-  return `hsla(${(pitch % 12) * 30},${velocity * 100}%,${Math.abs(octave + 2) * 8}%,${alpha})`
+  return `hsla(${(pitch % 12) * 30},${velocity * 100}%,${Math.abs(octave + 2) * 6}%,${alpha})`
 }
 
 /**
  * Get a color for a certain pitch frequency in Hz
  * */
 export function freqColor(freq, vel, alpha) {
-  return pitchColor(freqPitch(freq), 3, vel, alpha)
+  return pitchColor(freqPitch(freq) + 12 * 2, undefined, vel, alpha)
 }
 
 /**
