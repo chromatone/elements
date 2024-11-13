@@ -15,8 +15,8 @@ import MidiKeysNote from './MidiKeysNote.vue';
 
 
 const props = defineProps({
-  width: { type: Number, default: 800 },
-  height: { type: Number, default: 240 },
+  width: { type: Number, default: 1100 },
+  height: { type: Number, default: 340 },
   controlOffset: { type: Number, default: 100 },
   slotOffset: { type: Number, default: 100 }
 })
@@ -24,7 +24,7 @@ const props = defineProps({
 
 const { activeNotes } = useMidi()
 
-const { roundBegin: begin, roundEnd: end, beginControl, endControl, keys: rawKeys } = useRange()
+const { roundBegin: begin, roundEnd: end, beginControl, endControl, range } = useRange()
 
 const svg = ref()
 const area = ref()
@@ -80,14 +80,14 @@ watch(scaleChroma, scale => {
 
 const filterScale = useStorage('filter-keys', true)
 
-const keys = computed(() => filterScale.value ? rawKeys.value.filter(key => {
+const keys = computed(() => filterScale.value ? range.value.filter(key => {
   return globalScale.isIn(notes[(key + 3) % 12])
-}) : rawKeys.value)
+}) : range.value)
 
 </script>
 
 <template lang='pug'>
-svg.w-full.cursor-pointer.select-none.touch-none(
+svg.cursor-pointer.select-none.touch-none.shadow-xl.mx-auto(
   :viewBox="`0 -${slotOffset} ${width} ${height + controlOffset}`"
   version="1.1",
   baseProfile="full",
@@ -127,7 +127,7 @@ svg.w-full.cursor-pointer.select-none.touch-none(
         stroke-linecap="round"
         :stroke="pitchColor(n, 5, .4)"
         )
-      line.transition(
+      line(
         :y2="20"
         stroke-width="8"
         stroke-linecap="round"

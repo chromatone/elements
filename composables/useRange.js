@@ -13,10 +13,7 @@ export function useRange() {
   const endControl = ref()
 
 
-  const keys = computed(() => {
-    const arr = Array(roundEnd.value + 1 - roundBegin.value).fill(0).map((el, i) => i + roundBegin.value)
-    return arr
-  })
+  const range = computed(() => Array(roundEnd.value + 1 - roundBegin.value).fill(0).map((el, i) => i + roundBegin.value))
 
   useGesture({
     onDrag(ev) {
@@ -50,5 +47,5 @@ export function useRange() {
     eventOptions: { passive: false }
   })
 
-  return { begin, end, roundBegin, roundEnd, beginControl, endControl, keys }
+  return { begin, end, roundBegin, roundEnd, beginControl, endControl, range }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { onKeyDown, useCycleList, useWindowSize } from '@vueuse/core';
+import { onKeyDown, useCycleList } from '@vueuse/core';
 
 import ControlRotary from './components/ControlRotary.vue'
 import ControlAdsr from './components/ControlAdsr.vue';
@@ -25,9 +25,12 @@ onKeyDown('Escape', () => { stopAll() })
 
 const layers = ['round', 'fat', 'string', 'noise', 'sampler']
 
+const fxs = ['pingpong', 'srvb']
+
+const { state: fxState } = useCycleList(fxs)
+
 const { next, state, go } = useCycleList(layers)
 
-const { width } = useWindowSize()
 
 </script>
 
@@ -45,22 +48,28 @@ const { width } = useWindowSize()
       .i-la-github
       span v.{{ version }}
     //- span MIT {{ year }}
-  .sticky.top-0.rounded-lg.w-full.z-100
-    .relative.z-10.w-full.bg-dark-800.bg-op-80.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
-      article.absolute.top-0.p-4.flex.flex-col.h-full.gap-2(v-if="!started")
-        h2.text-2xl Multilayered polyphonic digital synthesizer web-app 
-        h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 5 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.
+
+    article.z-1000.fixed.top-0.left-0.right-0.p-8.flex.flex-col.gap-6.bg-dark-800.bg-op-50.backdrop-blur(v-if="!started" @pointerdown="play(midiNote.number)"  @pointerup="stop(midiNote.number)")
+      a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
+        img(src="/logo.svg" width="30" height="30")
+        h1.text-xl Chromatone
+      h2.text-4xl Elements
+      h2.text-2xl Multilayered polyphonic synthesizer app 
+      h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 5 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
+  .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
+    .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
       ShowFFT.max-h-30vh
       ShowScope.absolute.top-0.pointer-events-none
 
 
-  .flex.flex-col.p-2.pb-20.pt-4.gap-2
+  .flex.flex-col.p-2.pb-12.pt-4.gap-2
     .flex.items-center.gap-2.flex-wrap.w-full
-      button.text-xl.p-4.cursor-pointer.border-2.rounded-2xl.bg-green-900.active-bg-green-200( 
+      button.active-brightness-120.transition.hover-op-100.op-80.border-2.text-xl.p-4.cursor-pointer.rounded-full.active-bg-green-200( 
+        :style="{ backgroundColor: pitchColor(midiNote.number + 3) }"
         @pointerdown="play(midiNote.number)" 
-        @pointerup="stop(midiNote.number)" ) {{ started ? 'PLAY' : 'START' }}
+        @pointerup="stop(midiNote.number)" )
 
-      .grid.gap-2.grid-cols-3
+      .gap-2.columns-2
         .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, 3, undefined, voice.gate.value ? 1 : 0.1) }")
       .flex.flex-wrap.items-center.border-1.rounded-xl
         ControlRotary(
@@ -72,19 +81,19 @@ const { width } = useWindowSize()
           v-bind="params.synth.bpm"
           param="BPM")
 
-    .flex.flex-wrap.gap-2
-      .uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2(
-        v-for="layer in layers" :key="layer" 
-        :class="{ 'bg-dark-800': state == layer, 'border-white border-op-90': state == layer }"
-        @click="state = layer"
-        ) 
-        button.p-1.rounded-full.bg-dark-100.border-1(
-          :class="{ 'border-white border-op-90': controls[layer].on }"
-          :style="{ opacity: controls[layer].on ? 1 : 0.2 }"
-          @click="controls[layer].on == 0 ? controls[layer].on = 1 : controls[layer].on = 0"
-          )
-          .i-la-power-off
-        .p-0 {{ layer }}
+      .flex.flex-wrap.gap-2.flex-1
+        a.cursor-pointer.no-underline.uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.text-sm.flex-1.transition(
+          v-for="layer in layers" :key="layer" 
+          :class="{ 'bg-dark-800': controls[layer].on, 'border-white border-op-90': state == layer }"
+          @click="state = layer"
+          ) 
+          button.p-1.rounded-full.bg-dark-100.border-1(
+            :class="{ 'border-white border-op-90': controls[layer].on }"
+            :style="{ opacity: controls[layer].on ? 1 : 0.2 }"
+            @click.prevent.stop="controls[layer].on == 0 ? controls[layer].on = 1 : controls[layer].on = 0"
+            )
+            .i-la-power-off
+          .p-0 {{ layer }}
 
     .flex.flex-wrap.gap-2
       .relative.flex.flex-wrap.items-center.border-1.rounded-xl
@@ -115,14 +124,25 @@ const { width } = useWindowSize()
             v-model:r="controls[state].frelease"
             )
 
+      .flex.flex-wrap.gap-2.flex-1
+        a.no-underline.uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2(
+          v-for="fx in fxs" :key="fx" 
+          :class="{ 'bg-dark-800': fxState == fx, 'border-white border-op-90': fxState == fx }"
+          @click="fxState = fx"
+          ) 
+          button.p-1.rounded-full.bg-dark-100.border-1(
+            :class="{ 'border-white border-op-90': controls[fx].on }"
+            :style="{ opacity: controls[fx].on ? 1 : 0.2 }"
+            @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0"
+            )
+            .i-la-power-off
+          .p-0 {{ fx }}
+
+
       .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
-        v-for="fx in ['pingpong', 'srvb']" :key="fx"
+        v-for="fx in [fxState]" :key="fx"
         style="flex: 0 1 350px"
         )
-        button.ml-1.p-2.border-light-400.rounded-xl.border-1.uppercase.text-sm(
-          v-if="controls[fx].hasOwnProperty(`on`)"
-          :class="{ 'bg-dark-400': controls[fx].on }"
-          @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0") {{ fx }}
         template(
           v-for="(control, c) in groups[fx]"
           :key="c"
@@ -134,7 +154,7 @@ const { width } = useWindowSize()
 
   .flex-1
 
-  MidiKeys.max-h-35vh.sticky.bottom-4
+  MidiKeys
 
 
   .flex.flex-wrap.gap-2(v-if="inputs.length")
