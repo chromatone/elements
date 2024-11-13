@@ -56,10 +56,7 @@ const { next, state, go } = useCycleList(layers)
       h2.text-4xl Elements
       h2.text-2xl Multilayered polyphonic synthesizer app 
       h3.text-sm.max-w-55ch Explore unique sounds of 6 voice polyphony, 5 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
-  .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
-    .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
-      ShowFFT.max-h-30vh
-      ShowScope.absolute.top-0.pointer-events-none
+
 
 
   .flex.flex-col.p-2.pb-12.pt-4.gap-2
@@ -154,7 +151,14 @@ const { next, state, go } = useCycleList(layers)
 
   .flex-1
 
+
   MidiKeys
+
+  .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
+    .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
+      ShowFFT.max-h-30vh
+      ShowScope.absolute.top-0.pointer-events-none
+
 
 
   .flex.flex-wrap.gap-2(v-if="inputs.length")
