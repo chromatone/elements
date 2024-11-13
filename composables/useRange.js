@@ -18,12 +18,12 @@ export function useRange() {
   useGesture({
     onDrag(ev) {
       ev.event.preventDefault()
-      let val = begin.value + ev.delta[0] / 5
+      let val = begin.value + ev.delta[0] / 5 - ev.delta[1] / 5
       if (val + 1 <= end.value) begin.value = Math.round(val)
     },
     onWheel(ev) {
       ev.event.preventDefault()
-      let val = begin.value - ev.velocities[0] / 5
+      let val = begin.value - ev.velocities[0] / 5 + ev.velocities[1] / 5
       if (val + 1 <= end.value) begin.value = Math.round(val)
     }
   }, {
@@ -34,12 +34,12 @@ export function useRange() {
   useGesture({
     onDrag(ev) {
       ev.event.preventDefault()
-      let val = end.value + ev.delta[0] / 5
+      let val = end.value + ev.delta[0] / 5 - ev.delta[1] / 5
       if (val > begin.value) end.value = val
     },
     onWheel(ev) {
       ev.event.preventDefault()
-      let val = end.value - ev.velocities[0] / 5
+      let val = end.value - ev.velocities[0] / 5 + ev.velocities[1] / 5
       if (val - 1 > begin.value) end.value = val
     }
   }, {
