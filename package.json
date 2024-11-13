@@ -1,7 +1,6 @@
 {
 	"name": "chromatone-elements",
-	"description": "Digital audio synthesis playground",
-	"private": true,
+	"description": "Multilayered polyphonic synthesizer progressive web-app",
 	"version": "0.3.4",
 	"year": 2024,
 	"homepage": "https://elements.chromatone.center",
