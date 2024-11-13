@@ -42,6 +42,20 @@
 			"type": "image/png"
 		}
 	],
+	"screenshots": [
+		{
+			"src": "./screenshot-w.png",
+			"type": "image/png",
+			"sizes": "1280x720",
+			"form_factor": "wide"
+		},
+		{
+			"src": "./screenshot-n.jpg",
+			"type": "image/jpg",
+			"sizes": "720x1280",
+			"form_factor": "narrow"
+		}
+	],
 	"launch_handler": {
 		"client_mode": ["focus-existing", "auto"]
 	}
