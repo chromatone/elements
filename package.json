@@ -1,6 +1,6 @@
 {
-	"name": "elements-synth",
-	"description": "Digital sound synthesis playground",
+	"name": "chromatone-elements",
+	"description": "Digital audio synthesis playground",
 	"private": true,
 	"version": "0.3.3",
 	"year": 2024,
@@ -29,6 +29,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
+		"lib": "vite build --config vite.config.lib.js",
 		"preview": "vite preview"
 	},
 	"dependencies": {
