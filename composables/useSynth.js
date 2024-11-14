@@ -24,7 +24,7 @@ export const meters = reactive({})
 export const scopes = reactive({})
 export const FFTs = reactive({})
 
-export function useSynth() {
+export function useSynth(voiceCount = 8) {
 
   const initiated = ref(false)
   const started = ref(false)
@@ -33,7 +33,7 @@ export function useSynth() {
 
   const { controls, cv, groups, initRefs } = useParams(params, 'el')
 
-  const { voices, cycleNote, initVoices, getVoiceParams, stopAll } = useVoices()
+  const { voices, cycleNote, initVoices, getVoiceParams, stopAll } = useVoices(voiceCount)
 
   async function start() {
     if (initiated.value) return

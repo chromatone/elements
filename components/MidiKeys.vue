@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue';
 import { useGesture } from '@vueuse/gesture';
 import { useClamp } from '@vueuse/math'
 import { useStorage } from '@vueuse/core'
-import { ScaleType } from 'tonal'
+import { ScaleType, Chord } from 'tonal'
 
 import { useMidi } from '../composables/useMidi.js'
 import { notes, pitchColor } from '../composables/calculations.js';
@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 
-const { activeNotes } = useMidi()
+const { activeNotes, guessChords } = useMidi()
 
 const { roundBegin: begin, roundEnd: end, beginControl, endControl, range } = useRange()
 
@@ -205,6 +205,13 @@ svg.cursor-pointer.select-none.touch-none.shadow-xl.mx-auto(
         text-anchor="end"
         :y="controlOffset * .75"
         ) {{ notes[(end + 3) % 12] }}{{ Math.floor((end + 3) / 12) - 1 }}
+
+    g.detect(
+      :transform="`translate(${width * 4 / 5},${controlOffset * .75})`"
+      )
+      text.text-3xl.pointer-events-none(
+        text-anchor="middle"
+        ) {{ guessChords[0] }}
 
 
     g.range.pointer-events-none(
