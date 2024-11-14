@@ -1,5 +1,7 @@
 import { WebMidi } from "webmidi";
-import { reactive, onMounted, shallowReactive } from 'vue';
+import { reactive, onMounted, shallowReactive, computed } from 'vue';
+import { Midi } from "tonal";
+import { Chord } from "tonal";
 
 const inputs = shallowReactive({})
 const outputs = shallowReactive({})
@@ -22,6 +24,11 @@ const activeNotes = reactive({})
 
 const midiLog = shallowReactive([])
 
+export const guessChords = computed(() => {
+  const list = Object.entries(activeNotes).filter(([_, v]) => v).map(([n]) => Midi.midiToNoteName(Number(n), { sharps: true }));
+  return Chord.detect(list)
+})
+
 export function useMidi() {
   onMounted(() => {
     if (midi.enabled || midi.enabled === null) return
@@ -38,7 +45,7 @@ export function useMidi() {
       })
     }).catch(e => midi.enabled = null)
   })
-  return { midi, inputs, outputs, WebMidi, midiLog, midiNote, activeNotes }
+  return { midi, inputs, outputs, WebMidi, midiLog, midiNote, activeNotes, guessChords }
 }
 
 
@@ -91,6 +98,4 @@ function initMidi() {
     }
   })
 }
-
-
 
