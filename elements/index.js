@@ -4,6 +4,7 @@ import { params as pingpong } from './fx/pingpong'
 import { params as noise } from './noise'
 import { params as string } from './string'
 import { params as round } from './round'
+// import { params as sampler } from './sampler'
 
 export const params = {
   synth: {
@@ -14,6 +15,7 @@ export const params = {
   fat,
   noise,
   string,
+  // sampler,
   srvb,
   pingpong,
 }

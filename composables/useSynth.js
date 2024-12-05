@@ -16,8 +16,10 @@ import { useMidi } from './useMidi';
 import { createNoise } from '../elements/noise';
 import { createFat } from '../elements/fat';
 import { createString } from '../elements/string';
-// import { createSampler } from '../elements/sampler';
 import { createRound } from '../elements/round';
+
+// import { createSampler } from '../elements/sampler';
+// import sample from '../elements/A4.mp3?arraybuffer&base64';
 
 
 export const meters = reactive({})
@@ -58,12 +60,15 @@ export function useSynth(voiceCount = 8) {
     core.on('fft', (e) => FFTs[e.source] = [Array.from(e?.data.real.values()), Array.from(e?.data.imag.values())])
     core.on('error', err => console.log(err))
 
-    // let res = await fetch('/A4.mp3')
-    // let sampleBuffer = await ctx.decodeAudioData(await res.arrayBuffer())
+    // let sampleBuffer = await ctx.decodeAudioData(sample)
     // core.updateVirtualFileSystem({
     //   'piano': sampleBuffer.getChannelData(0),
     // })
 
+    renderSignal()
+  }
+
+  function renderSignal() {
     const signal = el.tanh(el.mul(cv.synth.vol, el.add(...voices.map((_, i) => {
       const voiceParams = getVoiceParams(i)
       return el.add(
@@ -76,11 +81,13 @@ export function useSynth(voiceCount = 8) {
     }
     ))))
 
-    const sampleRate = el.mul(0, el.meter({ name: 'sample_rate' }, el.sr()))
+    const measured = el.add(
+      el.mul(0, el.meter({ name: 'sample_rate' }, el.sr())),
+      el.fft({ name: 'main', size: 2048 },
+        el.scope({ name: 'main', size: 512 },
+          signal)))
 
-    const analyzed = el.fft({ name: 'main', size: 2048 }, el.scope({ name: 'main', size: 512 }, el.add(sampleRate, signal)))
-
-    const ping = pingPong([analyzed, analyzed], cv.pingpong, cv.synth.bpm)
+    const ping = pingPong([measured, measured], cv.pingpong, cv.synth.bpm)
 
     const stereo = srvb({
       key: 'srvb',
@@ -92,8 +99,9 @@ export function useSynth(voiceCount = 8) {
     }, ...ping)
 
     core.render(...stereo)
-
   }
+
+
 
   function play(midi = 57, vel = 1) {
     if (!started.value) { start() }

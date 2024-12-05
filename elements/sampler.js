@@ -1,8 +1,6 @@
 import { midiFrequency } from "./index";
 import { el } from "@elemaudio/core";
 
-// TODO: Find a way to embed the initial piano sample into html so this works at local file://:/index.html
-
 export const params = {
   on: { value: 1, min: 0, max: 1, step: 1, hidden: true, },
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
