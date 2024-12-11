@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@elemaudio/core':
-        specifier: 3.2.1
-        version: 3.2.1
+        specifier: 4.0.1
+        version: 4.0.1
       '@elemaudio/web-renderer':
-        specifier: 3.2.3
-        version: 3.2.3
+        specifier: 4.0.0
+        version: 4.0.0
       '@unocss/reset':
         specifier: ^0.65.1
         version: 0.65.1
@@ -94,11 +94,11 @@ packages:
     resolution: {integrity: sha512-Z/yiTPj+lDVnF7lWeKCIJzaIkI0vYO87dMpZ4bg4TDrFe4XXLFWL1TbXU27gBP3QccxV9mZICCrnjnYlJjXHOA==}
     engines: {node: '>=6.9.0'}
 
-  '@elemaudio/core@3.2.1':
-    resolution: {integrity: sha512-Id122jLwlJdc9v30RO/sMIxdhyVLXbav9rP5ReUqgWZtlxHcuzT+8/ZSErBNzIfDtwX9P2vwl4ZKBpGnde4y0w==}
+  '@elemaudio/core@4.0.1':
+    resolution: {integrity: sha512-O58CaR5ttxzPt1LwkJoXVipPLlZ8lZmOIHhJFiih3rWkfCZ3/H1X2XTG0HM2jAn3BokoP5jYSbnbEiQybyvRGw==}
 
-  '@elemaudio/web-renderer@3.2.3':
-    resolution: {integrity: sha512-ZIOlHCqHq7SWJeuH5ma1bMwAg/6mLdyOVnOsHalDmXDa/CJeksv7qoshHPvjUYyDk1Gi8Ut8NmYBkslUJ0+XFA==}
+  '@elemaudio/web-renderer@4.0.0':
+    resolution: {integrity: sha512-fRjqeGKhk4jHZypXOEG6eMfoSsJMOJUiXoW7c/FqoSOrP5WaltPMz/5OrvNPwT1vk651uYNDoS8o9h6sgV8GDQ==}
 
   '@esbuild/aix-ppc64@0.23.1':
     resolution: {integrity: sha512-6VhYk1diRqrhBAqpJEdjASR/+WVRtfjpqKuNw11cLiaWpAT/Uu+nokB+UJnevzy/P9C/ty6AOe0dwueMrGh/iQ==}
@@ -1396,15 +1396,16 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
-  '@elemaudio/core@3.2.1':
+  '@elemaudio/core@4.0.1':
     dependencies:
       eventemitter3: 5.0.1
       invariant: 2.2.4
       shallowequal: 1.1.0
 
-  '@elemaudio/web-renderer@3.2.3':
+  '@elemaudio/web-renderer@4.0.0':
     dependencies:
-      '@elemaudio/core': 3.2.1
+      '@elemaudio/core': 4.0.1
+      invariant: 2.2.4
 
   '@esbuild/aix-ppc64@0.23.1':
     optional: true
