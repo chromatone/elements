@@ -24,7 +24,7 @@
 	"engines": {
 		"node": "^20.x"
 	},
-	"packageManager": "pnpm@9.15.0",
+	"packageManager": "pnpm@9.15.4",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
@@ -32,24 +32,24 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@elemaudio/core": "4.0.1",
-		"@elemaudio/web-renderer": "4.0.0",
-		"@unocss/reset": "^0.65.1",
-		"@vueuse/core": "^12.0.0",
+		"@elemaudio/core": "^4.0.1",
+		"@elemaudio/web-renderer": "^4.0.3",
+		"@unocss/reset": "^65.4.3",
+		"@vueuse/core": "^12.5.0",
 		"@vueuse/gesture": "^2.0.0",
-		"@vueuse/math": "^12.0.0",
+		"@vueuse/math": "^12.5.0",
 		"svg-round-corners": "^0.4.3",
-		"tonal": "^6.3.0",
+		"tonal": "^6.4.0",
 		"vue": "^3.5.13",
 		"webmidi": "^3.1.12"
 	},
 	"devDependencies": {
-		"@unocss/extractor-pug": "^0.65.1",
+		"@unocss/extractor-pug": "^65.4.3",
 		"@vitejs/plugin-vue": "^5.2.1",
-		"@vue/language-plugin-pug": "^2.1.10",
+		"@vue/language-plugin-pug": "^2.2.0",
 		"pug": "^3.0.3",
-		"unocss": "^0.65.1",
-		"vite": "^6.0.3",
+		"unocss": "^65.4.3",
+		"vite": "^6.0.11",
 		"vite-plugin-singlefile": "^2.1.0"
 	}
 }
