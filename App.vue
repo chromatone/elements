@@ -39,7 +39,7 @@ const info = ref(true)
 <template lang="pug">
 .flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.flex-1.text-white
 
-  article.rounded-xl.z-1000.fixed.top-4.left-4.right-4.bottom-4.p-8.flex.flex-col.gap-6.bg-dark-800.bg-op-90.backdrop-blur.overflow-y-scroll.overscroll-none(v-if="info" @pointerdown="play(midiNote.number); info = false"  @pointerup="stop(midiNote.number)")
+  article.cursor-pointer.rounded-xl.z-1000.fixed.top-4.left-4.right-4.bottom-4.p-8.flex.flex-col.gap-6.bg-dark-800.bg-op-80.backdrop-blur.overflow-y-scroll.overscroll-none(v-show="info" @pointerdown="play(midiNote.number)"  @pointerup="stop(midiNote.number); info = false" )
     a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
       img(src="/logo.svg" width="30" height="30")
       h1.text-xl Chromatone
