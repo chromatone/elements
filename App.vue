@@ -31,7 +31,6 @@ const { state: fxState } = useCycleList(fxs)
 
 const { next, state, go } = useCycleList(layers)
 
-
 const info = ref(true)
 
 </script>
@@ -40,7 +39,7 @@ const info = ref(true)
 .flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.flex-1.text-white
 
   article.cursor-pointer.rounded-xl.z-1000.fixed.top-4.left-4.right-4.bottom-4.p-8.flex.flex-col.gap-6.bg-dark-800.bg-op-80.backdrop-blur.overflow-y-scroll.overscroll-none(v-show="info" @pointerdown="play(midiNote.number)"  @pointerup="stop(midiNote.number); info = false" )
-    a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
+    .font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
       img(src="/logo.svg" width="30" height="30")
       h1.text-xl Chromatone
     h2.text-4xl Elements
@@ -87,97 +86,103 @@ const info = ref(true)
   //- span MIT {{ year }}
 
 
-.flex.flex-col.p-2.pb-12.pt-4.gap-2.text-white
-  .flex.items-center.gap-2.flex-wrap.w-full
-    button.rounded-full.text-2xl(@click="info = true")
-      .i-la-info-circle
+.flex.flex-col.gap-1.text-white
+  .flex.items-center.gap-2.flex.px-2.pt-2
+
+    button.rounded-full.text-2xl.flex.items-center.gap-2(@click="info = true")
+      img(src="/logo.svg" width="40" height="40")
+      .flex.flex-wrap.items-start.gap-2
+        .text-xl.font-bold.-mb-3 Chromatone
+        .flex.items-center.gap-1
+          .text-lg Elements
+          .i-la-info-circle.text-sm.mt-2px
+    .flex-1
     button.active-brightness-120.transition.hover-op-100.op-80.border-2.text-xl.p-4.cursor-pointer.rounded-full.active-bg-green-200( 
       :style="{ backgroundColor: pitchColor(midiNote.number + 3) }"
       @pointerdown="play(midiNote.number)" 
       @pointerup="stop(midiNote.number)" )
 
-    .gap-2.columns-2
-      .p-2.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, undefined, undefined, voice.gate.value ? 1 : 0.1) }")
-    .flex.flex-wrap.items-center.border-1.rounded-xl
-      ControlRotary(
-        v-model="controls.synth.vol" 
-        v-bind="params.synth.vol"
-        param="VOL")
-      ControlRotary(
-        v-model="controls.synth.bpm" 
-        v-bind="params.synth.bpm"
-        param="BPM")
+    ControlRotary(
+      v-model="controls.synth.vol" 
+      v-bind="params.synth.vol"
+      param="VOL")
+    ControlRotary(
+      v-model="controls.synth.bpm" 
+      v-bind="params.synth.bpm"
+      param="BPM")
 
-    .flex.flex-wrap.gap-2.flex-1
-      a.cursor-pointer.no-underline.uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.text-sm.flex-1.transition(
-        v-for="layer in layers" :key="layer" 
-        :class="{ 'bg-dark-800': controls[layer].on, 'border-white border-op-90': state == layer }"
-        @click="state = layer"
-        ) 
-        button.p-1.rounded-full.bg-dark-100.border-1(
-          :class="{ 'border-white border-op-90': controls[layer].on }"
-          :style="{ opacity: controls[layer].on ? 1 : 0.2 }"
-          @click.prevent.stop="controls[layer].on == 0 ? controls[layer].on = 1 : controls[layer].on = 0"
+
+  .gap-2.flex.flex-wrap.px-2
+    .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, undefined, undefined, voice.gate.value ? 1 : 0.1) }")
+
+  .flex.flex-wrap.gap-2.px-2.pb-4.pt-1
+    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1(style="flex: 1 1 420px")
+      .flex.flex-wrap.gap-2
+        a.cursor-pointer.no-underline.uppercase.p-1.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.flex-1.transition(
+          v-for="layer in layers" :key="layer" 
+          :class="{ 'bg-dark-400': controls[layer].on, 'border-white border-op-90': state == layer }"
+          @click="state = layer"
+          ) 
+          button.p-1.rounded-full.bg-dark-100.border-1(
+            :class="{ 'border-white border-op-90': controls[layer].on }"
+            :style="{ opacity: controls[layer].on ? 1 : 0.2 }"
+            @click.prevent.stop="controls[layer].on == 0 ? controls[layer].on = 1 : controls[layer].on = 0"
+            )
+            .i-la-power-off
+          .p-0.text-sm {{ layer }}
+      .relative.flex.flex-wrap.items-start.flex-auto
+        template(
+          v-for="(control, c) in groups[state]"
+          :key="c"
           )
-          .i-la-power-off
-        .p-0 {{ layer }}
+          ControlRotary.w-4rem.flex-1(
+            v-model="controls[state][c]" 
+            v-bind="params[state][c]"
+            :param="c")
 
-  .flex.flex-wrap.gap-2
-    .relative.flex.flex-wrap.items-center.border-1.rounded-xl
-      template(
-        v-for="(control, c) in groups[state]"
-        :key="c"
+        .flex.flex-wrap.flex-1
+          ControlAdsr(
+            v-if="controls[state].attack"
+            title="Amplitude Envelope"
+            v-model:a="controls[state].attack"
+            v-model:d="controls[state].decay"
+            v-model:s="controls[state].sustain"
+            v-model:r="controls[state].release"
+            )
+          ControlAdsr(
+            v-if="controls[state].fattack"
+            title="Filter Envelope"
+            v-model:a="controls[state].fattack"
+            v-model:d="controls[state].fdecay"
+            v-model:s="controls[state].fsustain"
+            v-model:r="controls[state].frelease"
+            )
+    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1(style="flex: 1 1 220px")
+      .flex.flex-wrap.gap-2
+        a.no-underline.uppercase.p-1.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.flex-1(
+          v-for="fx in fxs" :key="fx" 
+          :class="{ 'bg-dark-800': fxState == fx, 'border-white border-op-90': fxState == fx }"
+          @click="fxState = fx"
+          ) 
+          button.p-1.rounded-full.bg-dark-100.border-1(
+            :class="{ 'border-white border-op-90': controls[fx].on }"
+            :style="{ opacity: controls[fx].on ? 1 : 0.2 }"
+            @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0"
+            )
+            .i-la-power-off
+          .p-0.text-sm {{ fx }}
+
+      .relative.flex.flex-1.flex-wrap.items-start.rounded-xl(
+        v-for="fx in [fxState]" :key="fx"
         )
-        ControlRotary.w-4em.flex-1(
-          v-model="controls[state][c]" 
-          v-bind="params[state][c]"
-          :param="c")
-
-      .flex.flex-wrap.flex-1
-        ControlAdsr(
-          v-if="controls[state].attack"
-          title="Amplitude Envelope"
-          v-model:a="controls[state].attack"
-          v-model:d="controls[state].decay"
-          v-model:s="controls[state].sustain"
-          v-model:r="controls[state].release"
+        template(
+          v-for="(control, c) in groups[fx]"
+          :key="c"
           )
-        ControlAdsr(
-          v-if="controls[state].fattack"
-          title="Filter Envelope"
-          v-model:a="controls[state].fattack"
-          v-model:d="controls[state].fdecay"
-          v-model:s="controls[state].fsustain"
-          v-model:r="controls[state].frelease"
-          )
-
-    .flex.flex-wrap.gap-2.flex-1
-      a.no-underline.uppercase.p-2.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2(
-        v-for="fx in fxs" :key="fx" 
-        :class="{ 'bg-dark-800': fxState == fx, 'border-white border-op-90': fxState == fx }"
-        @click="fxState = fx"
-        ) 
-        button.p-1.rounded-full.bg-dark-100.border-1(
-          :class="{ 'border-white border-op-90': controls[fx].on }"
-          :style="{ opacity: controls[fx].on ? 1 : 0.2 }"
-          @click="controls[fx].on == 0 ? controls[fx].on = 1 : controls[fx].on = 0"
-          )
-          .i-la-power-off
-        .p-0 {{ fx }}
-
-
-    .relative.flex.flex-wrap.items-center.border-1.rounded-xl(
-      v-for="fx in [fxState]" :key="fx"
-      style="flex: 0 1 350px"
-      )
-      template(
-        v-for="(control, c) in groups[fx]"
-        :key="c"
-        )
-        ControlRotary.w-4em.flex-1(
-          v-model="controls[fx][c]" 
-          v-bind="params[fx][c]"
-          :param="c")
+          ControlRotary.w-4rem.flex-1(
+            v-model="controls[fx][c]" 
+            v-bind="params[fx][c]"
+            :param="c")
 
 .flex-1
 

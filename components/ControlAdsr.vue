@@ -87,7 +87,7 @@ function interactionFactory(param, scale = .1) {
 </script>
 
 <template lang='pug'>
-svg.min-w-45.max-w-55.m-1.touch-none(
+svg.min-w-42.max-w-55.m-1.flex-1.touch-none(
   ref="knob"
   version="1.1",
   baseProfile="full",
