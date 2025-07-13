@@ -1,4 +1,4 @@
-<script setup>
+<script setup vapor>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { scopes } from '../composables/useSynth';
 

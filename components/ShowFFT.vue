@@ -1,4 +1,4 @@
-<script setup>
+<script setup vapor>
 import { ref, onMounted, watch, reactive, computed } from 'vue';
 import { FFTs, meters } from '../composables/useSynth';
 import { freqColor } from '../composables/calculations';
