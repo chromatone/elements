@@ -190,7 +190,7 @@ const info = ref(true)
 MidiKeys
 
 .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
-  .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur(  @pointerdown="play(midiNote.number)" @pointerup="stop(midiNote.number)") 
+  .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur() 
     ShowFFT.max-h-30vh
     ShowScope.absolute.top-0.pointer-events-none
 

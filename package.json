@@ -26,7 +26,7 @@
 	},
 	"packageManager": "pnpm@10.13.1",
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite dev --host",
 		"build": "vite build",
 		"lib": "vite build --config vite.config.lib.js",
 		"preview": "vite preview"
@@ -40,7 +40,7 @@
 		"@vueuse/math": "^13.5.0",
 		"svg-round-corners": "^0.4.3",
 		"tonal": "^6.4.2",
-		"vue": "3.6.0-alpha.1",
+		"vue": "3.6.0-alpha.2",
 		"webmidi": "^3.1.12"
 	},
 	"devDependencies": {
