@@ -10,12 +10,17 @@ const props = defineProps({
 
 
 const canvas = ref(null);
+let ctx = null;
 let animationFrameId = null;
+let currentStrokeStyle = props.color;
 
 onMounted(() => {
   if (canvas.value) {
     canvas.value.width = canvas.value.clientWidth
     canvas.value.height = canvas.value.clientHeight
+    ctx = canvas.value.getContext('2d', { willReadFrequently: false });
+    ctx.strokeStyle = currentStrokeStyle;
+    ctx.lineWidth = 3;
   }
   startAnimation();
 });
@@ -44,19 +49,19 @@ function findTriggerIndex(data, triggerLevel) {
 }
 
 function draw() {
-  if (!canvas.value) return
-  const ctx = canvas.value.getContext('2d');
+  if (!canvas.value || !ctx) return
   const { width, height } = canvas.value;
   const samples = scopes[props.name];
-
   if (!samples || samples.length < 2) {
     animationFrameId = requestAnimationFrame(draw);
     return;
   }
 
+  if (currentStrokeStyle !== props.color) {
+    currentStrokeStyle = props.color;
+    ctx.strokeStyle = currentStrokeStyle;
+  }
   ctx.clearRect(0, 0, width, height);
-  ctx.strokeStyle = props.color;
-  ctx.lineWidth = 3;
 
   const triggerIndex = findTriggerIndex(samples, props.triggerLevel);
   const step = width / samples.length;

@@ -87,7 +87,7 @@ const keys = computed(() => filterScale.value ? range.value.filter(key => {
 </script>
 
 <template lang='pug'>
-svg.cursor-pointer.select-none.touch-none.shadow-xl.mx-auto(
+svg.cursor-pointer.select-none.touch-none.shadow-xl.mx-2.max-h-90svh.rounded-xl(
   :viewBox="`0 -${slotOffset} ${width} ${height + controlOffset}`"
   version="1.1",
   baseProfile="full",

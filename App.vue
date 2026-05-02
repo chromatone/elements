@@ -17,7 +17,7 @@ import MidiKeys from './components/MidiKeys.vue';
 
 const { play, stop, stopAll, started, controls, groups, voices, params } = useSynth()
 
-const { inputs, midiLog, midiNote } = useMidi()
+const { midi, inputs, midiLog, midiNote } = useMidi()
 
 watch(midiNote, note => play(note.number, note.velocity))
 
@@ -87,7 +87,7 @@ const info = ref(true)
 
 
 .flex.flex-col.gap-1.text-white
-  .flex.items-center.gap-2.flex.px-2.pt-2
+  .flex.items-center.gap-2.flex.px-2.pt-2.sticky.top-0.z-2.bg-dark-300.shadow-lg.border-b-2.border-dark-200
 
     button.rounded-full.text-2xl.flex.items-center.gap-2(@click="info = true")
       img(src="/logo.svg" width="40" height="40")
@@ -97,6 +97,7 @@ const info = ref(true)
           .text-lg Elements
           .i-la-info-circle.text-sm.mt-2px
     .flex-1
+
     button.active-brightness-120.transition.hover-op-100.op-80.border-2.text-xl.p-4.cursor-pointer.rounded-full.active-bg-green-200( 
       :style="{ backgroundColor: pitchColor(midiNote.number + 3) }"
       @pointerdown="play(midiNote.number)" 
@@ -110,13 +111,20 @@ const info = ref(true)
       v-model="controls.synth.bpm" 
       v-bind="params.synth.bpm"
       param="BPM")
-
+    ControlRotary(
+      v-model="midi.channel"
+      :min="1"
+      :max="16"
+      :step="1"
+      :fixed="0"
+      param="MIDI CH"
+    )
 
   .gap-2.flex.flex-wrap.px-2
     .p-1.flex-1.rounded-xl(v-for="voice in voices" :key="voice" :style="{ backgroundColor: pitchColor(voice.midi.value - 9, undefined, undefined, voice.gate.value ? 1 : 0.1) }")
 
   .flex.flex-wrap.gap-2.px-2.pb-4.pt-1
-    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1(style="flex: 1 1 420px")
+    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1.sticky.top-2.z-5.bg-dark-300.shadow-lg.border-b-2.border-dark-200(style="flex: 1 1 420px")
       .flex.flex-wrap.gap-2
         a.cursor-pointer.no-underline.uppercase.p-1.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.flex-1.transition(
           v-for="layer in layers" :key="layer" 
@@ -157,7 +165,7 @@ const info = ref(true)
             v-model:s="controls[state].fsustain"
             v-model:r="controls[state].frelease"
             )
-    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1(style="flex: 1 1 220px")
+    .flex.flex-col.gap-2.border-1.border-light-300.border-op-50.bg-dark-900.rounded-2xl.p-1.sticky.top-2.z-8.bg-dark-300.shadow-lg.border-b-2.border-dark-200(style="flex: 1 1 220px")
       .flex.flex-wrap.gap-2
         a.no-underline.uppercase.p-1.bg-dark-300.rounded-xl.border-1.border-black.border-op-20.flex.items-center.gap-2.flex-1(
           v-for="fx in fxs" :key="fx" 
@@ -187,7 +195,7 @@ const info = ref(true)
 .flex-1
 
 
-MidiKeys
+MidiKeys.sticky.top-2.z-5.bg-dark-300.shadow-lg.border-b-2.border-dark-200
 
 .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
   .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur() 

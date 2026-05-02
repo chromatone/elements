@@ -9,7 +9,8 @@ const outputs = shallowReactive({})
 const midi = reactive({
   enabled: false,
   playing: false,
-  stopped: true
+  stopped: true,
+  channel: 1  // Target channel to listen on (1-16)
 })
 
 const midiNote = reactive({
@@ -74,6 +75,7 @@ function initMidi() {
     input.addListener('noteoff', onNote)
 
     function onNote({ type, note: { number, attack }, message: { channel }, timestamp, port: { id } }) {
+      if (midi.channel !== null && channel !== midi.channel) return
       const velocity = type == 'noteoff' ? 0 : attack
       Object.assign(midiNote, {
         number,
