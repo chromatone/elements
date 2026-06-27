@@ -8,7 +8,7 @@ export const params = {
   shape: { value: 0.2, min: 0, max: 1, step: 0.01, },
   vibdep: { value: 0.1, min: 0, max: .5, step: 0.01, fixed: 2 },
   vibrate: { value: 2, min: 1, max: 8, step: 0.01, },
-  cutoff: { value: 200, min: 10, max: 20000, step: 1, },
+  cutoff: { value: 200, min: 10, max: 20000, step: 1, log: true },
   cutq: { value: 1.1, min: 0, max: 5, step: 0.1, },
   attack: { value: 1, min: 0.01, max: 10, step: 0.01, hidden: true, },
   decay: { value: 1, min: 0.1, max: 10, step: 0.1, hidden: true, },

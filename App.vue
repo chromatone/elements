@@ -38,47 +38,48 @@ const info = ref(true)
 <template lang="pug">
 .flex.flex-col.items-start.transition-all.duration-500.ease-out.select-none.rounded-8.shadow-xl.w-full.h-full.flex-1.text-white
 
-  article.cursor-pointer.rounded-xl.z-1000.fixed.top-4.left-4.right-4.bottom-4.p-8.flex.flex-col.gap-6.bg-dark-800.bg-op-80.backdrop-blur.overflow-y-scroll.overscroll-none(v-show="info" @pointerdown="play(midiNote.number)"  @pointerup="stop(midiNote.number); info = false" )
+  article.cursor-pointer.rounded-xl.z-1000.fixed.top-4.left-4.right-4.bottom-4.p-8.flex.flex-col.gap-2.bg-dark-800.bg-op-80.backdrop-blur.overflow-y-scroll.overscroll-none(v-show="info" @pointerdown="play(midiNote.number)"  @pointerup="stop(midiNote.number); info = false" )
     .font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
       img(src="/logo.svg" width="30" height="30")
       h1.text-xl Chromatone
-    h2.text-4xl Elements
-    h2.text-2xl Multilayered polyphonic synthesizer app 
-    h3.max-w-55ch Explore unique sounds of 6 voice polyphony, 4 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
-    .text-xl.font-bold.py-2 Install this web-app for offline use!
-    p.max-w-55ch This Progressive Web-Application can be installed and used just like a regular app on your mobile or desktop platform.
-    .flex.flex-col.gap-4.max-w-55ch
-      .p-0
-        i.i-la-apple.inline-block.text-lg
-        | <b>iOS</b>: Open this page in Safari, tap the 
-        i.i-ic-round-ios-share.inline-block
-        |   "Share" button, then select 
-        i.i-material-symbols-add-box-outline-rounded.inline-block
-        |   "Add to Home Screen" action down in the list.
-      .p-0 
-        i.i-la-android.inline-block.text-lg
-        | <b>Android</b>: Open this page in Chrome, tap the menu button 
-        i.i-la-ellipsis-v.inline-block
-        |  (three dots), then select "Add to Home Screen".
-      .p-0 
-        i.i-la-apple.inline-block.text-lg
-        |  <b>macOS</b>: Open this page in Safari, click the 
-        i.i-ic-round-ios-share.inline-block
-        |  "Share" button, then select 
-        i.i-f7-rectangle-dock.inline-block
-        |  "Add to Dock" action in the list.
-      .p-0  
-        i.i-la-windows.inline-block.text-lg
-        | <b>Windows</b>: Open this page in Edge, click the "Settings and more" button 
-        i.i-la-ellipsis-h.inline-block
-        |  (three dots), then select "Apps" > "Install this site as an app".
+    h2.text-3xl Elements
+    h2.text-md Polyphonic synthesizer
+    p.text-sm.max-w-55ch.op-80 Explore unique sounds of 6 voice polyphony, 4 layers of sound generators for each of them and 2 global effects with any MIDI controller, laptop keyboard and flexible onscreen keyboard with choice of scales while analyzing the output on the global oscilloscope and colorized FFT time-frequency bars. Notes and frequencies are set according to Chromatone.  
+    .text-xs.pt-2.font-bold.op-90 Click anywhere to proceed
+    //- .text-xl.font-bold.py-2 Install this web-app for offline use!
+    //- p.max-w-55ch This Progressive Web-Application can be installed and used just like a regular app on your mobile or desktop platform.
+    //- .flex.flex-col.gap-4.max-w-55ch
+    //-   .p-0
+    //-     i.i-la-apple.inline-block.text-lg
+    //-     | <b>iOS</b>: Open this page in Safari, tap the 
+    //-     i.i-ic-round-ios-share.inline-block
+    //-     |   "Share" button, then select 
+    //-     i.i-material-symbols-add-box-outline-rounded.inline-block
+    //-     |   "Add to Home Screen" action down in the list.
+    //-   .p-0 
+    //-     i.i-la-android.inline-block.text-lg
+    //-     | <b>Android</b>: Open this page in Chrome, tap the menu button 
+    //-     i.i-la-ellipsis-v.inline-block
+    //-     |  (three dots), then select "Add to Home Screen".
+    //-   .p-0 
+    //-     i.i-la-apple.inline-block.text-lg
+    //-     |  <b>macOS</b>: Open this page in Safari, click the 
+    //-     i.i-ic-round-ios-share.inline-block
+    //-     |  "Share" button, then select 
+    //-     i.i-f7-rectangle-dock.inline-block
+    //-     |  "Add to Dock" action in the list.
+    //-   .p-0  
+    //-     i.i-la-windows.inline-block.text-lg
+    //-     | <b>Windows</b>: Open this page in Edge, click the "Settings and more" button 
+    //-     i.i-la-ellipsis-h.inline-block
+    //-     |  (three dots), then select "Apps" > "Install this site as an app".
     .flex-1
     .flex.flex-wrap.items-center.gap-2
-      a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
-        img(src="/logo.svg" width="20" height="20")
-        h1.p-0 Chromatone
-      h2.p-0 Elements
-      .flex-1
+      //- a.font-bold.no-underline.flex.items-center.gap-1(href="https://chromatone.center" target="_blank")
+      //-   img(src="/logo.svg" width="20" height="20")
+      //-   h1.p-0 Chromatone
+      //- h2.p-0 Elements
+      //- .flex-1
 
       a.flex.gap-1.items-center.no-underline(href="https://github.com/chromatone/elements/" target="_blank")
         .i-la-github

@@ -7,7 +7,7 @@ export const params = {
   octave: { value: 0, min: -2, max: 2, step: 1 },
   noise: { value: 0.95, min: 0, max: 2, step: 0.01, fixed: 2 },
   feedback: { value: 0.95, min: 0.8, max: .99, step: 0.01, },
-  cutoff: { value: 200, min: 10, max: 20000, step: 1, },
+  cutoff: { value: 200, min: 10, max: 20000, step: 1, log: true },
   cutq: { value: 1.1, min: 0, max: 5, step: 0.1, },
   bandq: { value: 1, min: 0, max: 50, step: 0.1, },
   attack: { value: 1, min: 0.01, max: 10, step: 0.01, hidden: true, },
