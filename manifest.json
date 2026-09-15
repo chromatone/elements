@@ -1,5 +1,5 @@
 {
-	"id": "elements-v.0.5.0",
+	"id": "elements-v.0.6.0",
 	"name": "Elements Synth",
 	"short_name": "Elements",
 	"description": "Web polyphonic multilayered digital synthesizer",
@@ -8,10 +8,18 @@
 	"theme_color": "#444",
 	"display": "standalone",
 	"orientation": "any",
-	"display_override": ["window-controls-overlay", "minimal-ui", "standalone"],
+	"display_override": [
+		"window-controls-overlay",
+		"minimal-ui",
+		"standalone"
+	],
 	"handle_links": "preferred",
 	"prefer_related_applications": false,
-	"categories": ["music", "audio", "tools"],
+	"categories": [
+		"music",
+		"audio",
+		"tools"
+	],
 	"icons": [
 		{
 			"src": "./logo.svg",
@@ -57,6 +65,9 @@
 		}
 	],
 	"launch_handler": {
-		"client_mode": ["focus-existing", "auto"]
+		"client_mode": [
+			"focus-existing",
+			"auto"
+		]
 	}
 }
