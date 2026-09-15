@@ -87,7 +87,7 @@ const info = ref(true)
   //- span MIT {{ year }}
 
 
-.flex.flex-col.gap-1.text-white
+.flex.flex-col.gap-1.text-white.h-full
   .flex.items-center.gap-2.flex.px-2.pt-2.sticky.top-0.z-2.bg-dark-300.shadow-lg.border-b-2.border-dark-200
 
     button.rounded-full.text-2xl.flex.items-center.gap-2(@click="info = true")
@@ -193,19 +193,19 @@ const info = ref(true)
             v-bind="params[fx][c]"
             :param="c")
 
-.flex-1
+.flex-auto
 
 
-MidiKeys.sticky.top-2.z-5.bg-dark-300.shadow-lg.border-b-2.border-dark-200
+  MidiKeys.sticky.top-2.z-5.bg-dark-300.shadow-lg.border-b-2.border-dark-200
 
-.sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
-  .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur() 
-    ShowFFT.max-h-30vh
-    ShowScope.absolute.top-0.pointer-events-none
+  .sticky.top-0.rounded-lg.w-full.z-100.shadow-lg
+    .relative.z-10.w-full.bg-dark-800.bg-op-50.backdrop-blur() 
+      ShowFFT.max-h-30vh
+      ShowScope.absolute.top-0.pointer-events-none
 
 
 
-.flex.flex-wrap.gap-2(v-if="inputs.length")
+.flex.flex-1.flex-wrap.gap-2(v-if="inputs.length")
   .p-2.rounded-md.bg-dark-300(v-for="(input, i) in inputs" :key="i") 
     .text-xs {{ input?.manufacturer }}
     .text-lg {{ input.name }}

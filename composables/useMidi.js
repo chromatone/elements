@@ -1,5 +1,5 @@
 import { WebMidi } from "webmidi";
-import { reactive, onMounted, shallowReactive, computed } from 'vue';
+import { reactive, onMounted, onUnmounted, shallowReactive, shallowRef, computed } from 'vue';
 import { Midi } from "tonal";
 import { Chord } from "tonal";
 
@@ -10,7 +10,7 @@ const midi = reactive({
   enabled: false,
   playing: false,
   stopped: true,
-  channel: 1  // Target channel to listen on (1-16)
+  channel: 1
 })
 
 const midiNote = reactive({
@@ -23,12 +23,38 @@ const midiNote = reactive({
 
 const activeNotes = reactive({})
 
-const midiLog = shallowReactive([])
+// FIX: circular buffer instead of reactive array with unshift/pop
+const MIDI_LOG_MAX = 100
+const midiLogBuffer = new Array(MIDI_LOG_MAX)
+let midiLogIndex = 0
+let midiLogCount = 0
+export const midiLogVersion = shallowRef(0)
+
+// Expose a read-only view for the UI
+export const midiLog = {
+  get length() { return midiLogCount },
+  [Symbol.iterator]() {
+    let i = 0
+    const count = midiLogCount
+    const start = count < MIDI_LOG_MAX ? 0 : midiLogIndex
+    return {
+      next() {
+        if (i >= count) return { done: true }
+        const idx = (start + i) % MIDI_LOG_MAX
+        i++
+        return { value: midiLogBuffer[idx] }
+      }
+    }
+  }
+}
 
 export const guessChords = computed(() => {
   const list = Object.entries(activeNotes).filter(([_, v]) => v).map(([n]) => Midi.midiToNoteName(Number(n), { sharps: true }));
   return Chord.detect(list)
 })
+
+// FIX: track cleanup functions for proper teardown
+let cleanupFns = []
 
 export function useMidi() {
   onMounted(() => {
@@ -36,20 +62,35 @@ export function useMidi() {
     WebMidi.enable().then(() => {
       midi.enabled = true
       initMidi()
-      WebMidi.addListener("connected", initMidi)
-      WebMidi.addListener("disconnected", e => {
+
+      // FIX: store references so we can remove them later
+      const onConnected = () => initMidi()
+      const onDisconnected = (e) => {
         if (e.port.type == 'input') {
           delete inputs[e.port.id]
         } else if (e.port.type == 'output') {
           delete outputs[e.port.id]
         }
+      }
+
+      WebMidi.addListener("connected", onConnected)
+      WebMidi.addListener("disconnected", onDisconnected)
+
+      cleanupFns.push(() => {
+        WebMidi.removeListener("connected", onConnected)
+        WebMidi.removeListener("disconnected", onDisconnected)
       })
     }).catch(e => midi.enabled = null)
   })
+
+  // FIX: clean up all WebMidi listeners on unmount
+  onUnmounted(() => {
+    cleanupFns.forEach(fn => fn())
+    cleanupFns = []
+  })
+
   return { midi, inputs, outputs, WebMidi, midiLog, midiNote, activeNotes, guessChords }
 }
-
-
 
 function initMidi() {
   WebMidi.inputs.forEach(input => {
@@ -67,8 +108,12 @@ function initMidi() {
       if (ev?.message?.type === "clock") return
       const { timestamp, message } = ev
       inputs[input.id].message = message
-      midiLog.unshift({ timestamp, message })
-      if (midiLog.length > 100) midiLog.pop()
+
+      // FIX: circular buffer write — O(1) instead of O(n) unshift
+      midiLogBuffer[midiLogIndex] = { timestamp, message }
+      midiLogIndex = (midiLogIndex + 1) % MIDI_LOG_MAX
+      midiLogCount = Math.min(midiLogCount + 1, MIDI_LOG_MAX)
+      midiLogVersion.value++
     })
 
     input.addListener('noteon', onNote)
@@ -76,7 +121,7 @@ function initMidi() {
 
     function onNote({ type, note: { number, attack }, message: { channel }, timestamp, port: { id } }) {
       if (midi.channel !== null && channel !== midi.channel) return
-      const velocity = type == 'noteoff' ? 0 : attack
+      const velocity = type === 'noteoff' ? 0 : attack
       Object.assign(midiNote, {
         number,
         velocity,
@@ -86,12 +131,6 @@ function initMidi() {
       })
       activeNotes[number] = velocity
     }
-
-    // controlchange: handleControlChange(input),
-    // channelaftertouch: handleMonoAftertouch(input),
-    // keyaftertouch: handlePolyAftertouch(input),
-    // pitchbend: ev => {     },
-
   })
   WebMidi.outputs.forEach(output => {
     outputs[output.id] = {
@@ -99,5 +138,4 @@ function initMidi() {
       manufacturer: output.manufacturer,
     }
   })
-}
-
+} 

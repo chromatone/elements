@@ -1,6 +1,7 @@
 <script setup vapor>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { scopes } from '../composables/useSynth';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+// FIX: import version counter + plain data object instead of reactive scopes
+import { scopes, scopeVersion } from '../composables/useSynth';
 
 const props = defineProps({
   name: { default: 'main', type: String },
@@ -8,11 +9,11 @@ const props = defineProps({
   triggerLevel: { default: 0, type: Number },
 })
 
-
 const canvas = ref(null);
 let ctx = null;
 let animationFrameId = null;
 let currentStrokeStyle = props.color;
+let pendingDraw = false;
 
 onMounted(() => {
   if (canvas.value) {
@@ -22,20 +23,27 @@ onMounted(() => {
     ctx.strokeStyle = currentStrokeStyle;
     ctx.lineWidth = 3;
   }
-  startAnimation();
 });
 
 onUnmounted(() => {
   stopAnimation();
 });
 
-function startAnimation() {
-  animationFrameId = requestAnimationFrame(draw);
-}
+// FIX: only redraw when scope data actually changes — no more continuous 60fps loop
+watch(scopeVersion, () => {
+  if (!pendingDraw) {
+    pendingDraw = true;
+    animationFrameId = requestAnimationFrame(() => {
+      pendingDraw = false;
+      draw();
+    });
+  }
+});
 
 function stopAnimation() {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
   }
 }
 
@@ -51,11 +59,9 @@ function findTriggerIndex(data, triggerLevel) {
 function draw() {
   if (!canvas.value || !ctx) return
   const { width, height } = canvas.value;
+  // FIX: scopes[name] is now a Float32Array (direct reference, no copy)
   const samples = scopes[props.name];
-  if (!samples || samples.length < 2) {
-    animationFrameId = requestAnimationFrame(draw);
-    return;
-  }
+  if (!samples || samples.length < 2) return;
 
   if (currentStrokeStyle !== props.color) {
     currentStrokeStyle = props.color;
@@ -80,7 +86,7 @@ function draw() {
   }
   ctx.stroke();
 
-  animationFrameId = requestAnimationFrame(draw);
+  // FIX: no more requestAnimationFrame(draw) — we only draw on data change
 }
 </script>
 

@@ -46,7 +46,7 @@ export function createString({ gate, midi, vel }, cv, bpm) {
 
   const delTime = el.div(el.sr(), freq)
 
-  const excitation = el.mul(envelope, el.noise(), cv.noise)
+  const excitation = el.mul(envelope, el.blepsaw(freq), cv.noise)
 
   const bandpass = el.bandpass(freq, cv.bandq, excitation)
 

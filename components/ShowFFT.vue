@@ -1,6 +1,7 @@
 <script setup vapor>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { FFTs, meters } from '../composables/useSynth';
+// FIX: import version counter + plain data object instead of reactive FFTs
+import { FFTs, meters, fftVersion } from '../composables/useSynth';
 import { freqColor } from '../composables/calculations';
 
 const props = defineProps({
@@ -14,11 +15,10 @@ let pendingDraw = false;
 
 const sampleRate = ref(48000);
 
-// LUTs - lookup tables for expensive calculations
-let xLUT = [];           // Precomputed x positions
-let barWidthLUT = [];    // Precomputed bar widths  
-let freqLUT = [];        // Precomputed frequencies for color
-let len = 0;             // Current FFT size
+let xLUT = [];
+let barWidthLUT = [];
+let freqLUT = [];
+let len = 0;
 
 onMounted(() => {
   if (canvas.value) {
@@ -28,14 +28,16 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (rafId) cancelAnimationFrame(afId);
+  if (rafId) cancelAnimationFrame(rafId);
 });
 
 watch(() => meters.sample_rate?.max, (val) => {
   if (val) sampleRate.value = val;
 }, { immediate: true });
 
-watch(() => FFTs?.[props.name], () => {
+// FIX: watch the version counter instead of the reactive array
+// FFTs[name] is now a plain array of Float32Array — no Proxy overhead
+watch(fftVersion, () => {
   if (!pendingDraw) {
     pendingDraw = true;
     rafId = requestAnimationFrame(() => {
@@ -70,10 +72,10 @@ function rebuildLUTs() {
 function draw() {
   if (!canvas.value || !ctx) return;
 
+  // FIX: FFTs[name] is now [Float32Array, Float32Array] — direct typed array access
   const data = FFTs?.[props.name];
   if (!data || !data[0]?.length) return;
 
-  // Rebuild LUTs if FFT size changed
   if (data[0].length !== len) {
     rebuildLUTs();
   }
@@ -98,5 +100,5 @@ canvas.max-w-full.w-full(
   ref="canvas" 
   height="320"
   width="800"
-  )
+)
 </template>

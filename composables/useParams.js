@@ -1,5 +1,5 @@
 import { el } from '@elemaudio/core'
-import { reactive, watch, ref, shallowReactive, computed } from "vue";
+import { reactive, watch, ref, shallowReactive } from "vue";
 import { useClamp } from "@vueuse/math";
 import { useStorage } from "@vueuse/core";
 
@@ -10,7 +10,7 @@ export function useParams(params, title = "ref") {
   const setters = shallowReactive({})
   const groups = shallowReactive({})
 
-  let refsInitiated = false
+  let refsInitialized = false
 
   for (let g in params) {
     const group = params[g]
@@ -39,18 +39,24 @@ export function useParams(params, title = "ref") {
         setters[g][p] = setter
       }
     }
-    refsInitiated = true
+    refsInitialized = true
   }
 
-  watch(controls, () => {
-    if (!refsInitiated) return
-    for (let g in controls) {
-      const group = params[g]
-      for (let p in group) {
-        setters[g][p]({ value: controls[g][p] });
-      }
-    }
-  }, { deep: true })
+  // FIX: per-group watchers instead of one deep watch on the entire tree.
+  // Each group watcher only traverses its own parameters, not the whole object.
+  for (let g in params) {
+    watch(
+      () => controls[g],
+      (groupControls) => {
+        if (!refsInitialized) return
+        const group = params[g]
+        for (let p in group) {
+          setters[g]?.[p]?.({ value: groupControls[p] })
+        }
+      },
+      { deep: true }
+    )
+  }
 
   return { controls, cv, setters, groups, initRefs }
 }

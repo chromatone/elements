@@ -16,7 +16,7 @@ import MidiKeysNote from './MidiKeysNote.vue';
 
 const props = defineProps({
   width: { type: Number, default: 1100 },
-  height: { type: Number, default: 340 },
+  height: { type: Number, default: 240 },
   controlOffset: { type: Number, default: 100 },
   slotOffset: { type: Number, default: 100 }
 })
