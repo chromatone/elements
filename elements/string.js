@@ -6,6 +6,7 @@ export const params = {
   gain: { value: 0.8, min: 0, max: 2, step: 0.01, },
   octave: { value: 0, min: -2, max: 2, step: 1 },
   noise: { value: 0.95, min: 0, max: 2, step: 0.01, fixed: 2 },
+  color: { value: 0, min: 0, max: 1, step: 0.001, },
   feedback: { value: 0.95, min: 0.8, max: .99, step: 0.01, },
   cutoff: { value: 200, min: 10, max: 20000, step: 1, log: true },
   cutq: { value: 1.1, min: 0, max: 5, step: 0.1, },
@@ -46,7 +47,15 @@ export function createString({ gate, midi, vel }, cv, bpm) {
 
   const delTime = el.div(el.sr(), freq)
 
-  const excitation = el.mul(envelope, el.blepsaw(freq), cv.noise)
+  const whiteGain = el.cos(el.mul(cv.color, Math.PI / 2));
+  const pinkGain = el.sin(el.mul(cv.color, Math.PI / 2));
+
+  const noiseSrc = el.add(
+    el.mul(whiteGain, el.noise()),
+    el.mul(pinkGain, el.pinknoise())
+  );
+
+  const excitation = el.mul(envelope, noiseSrc, cv.noise)
 
   const bandpass = el.bandpass(freq, cv.bandq, excitation)
 
